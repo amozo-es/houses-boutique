@@ -1,0 +1,266 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import HeroSecondary from '../../components/HeroSecondary.astro';
+import PropertyCard from '../../components/PropertyCard.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const zones = await getCollection('zones');
+  return zones.map((zone) => ({
+    params: { zone: zone.slug },
+    props: { zone }
+  }));
+}
+
+interface Props {
+  zone: CollectionEntry<'zones'>;
+}
+
+const { zone } = Astro.props;
+
+// Get properties for this zone
+const allProperties = await getCollection('properties');
+const zoneProperties = allProperties.filter(property => property.data.zone === zone.data.title);
+
+// Get related zones (excluding current)
+const allZones = await getCollection('zones');
+const relatedZones = allZones.filter(z => z.slug !== zone.slug).slice(0, 3);
+
+// Helper function to format price
+const formatPrice = (price: number, currency: string = 'USD') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+    maximumFractionDigits: 0
+  }).format(price);
+};
+
+const formatNumber = (num: number) => {
+  return new Intl.NumberFormat('en-US').format(num);
+};
+---
+
+<Layout
+  title={`${zone.data.title} - Houses Boutique`}
+  description={`Discover exclusive properties in ${zone.data.title}. ${zone.data.description}`}
+  image={zone.data.image}
+  meta={zone.data.meta}
+>
+  <!-- Hero Section -->
+  <HeroSecondary
+    title={zone.data.title}
+    subtitle={zone.data.description}
+    height="h-96"
+    alignment="left"
+    backgroundImage={zone.data.image}
+  />
+
+  <!-- Zone Overview Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <!-- Zone Info -->
+        <div>
+          <h2 class="text-3xl font-bold text-primary-dark mb-6">
+            About {zone.data.title}
+          </h2>
+
+          <div class="prose prose-lg max-w-none text-neutral-dark mb-8">
+            <p class="leading-relaxed">
+              {zone.data.overview || zone.data.description}
+            </p>
+          </div>
+
+          <!-- Zone Statistics -->
+          <div class="grid grid-cols-2 gap-6 mb-8">
+            <div class="bg-primary-soft p-6 rounded-lg text-center text-primary-lightest">
+              <div class="text-3xl font-bold mb-2">
+                {zoneProperties.length}
+              </div>
+              <div class="text-sm">Available Properties</div>
+            </div>
+            {zone.data.averagePrice && (
+              <div class="bg-primary-soft p-6 rounded-lg text-center text-primary-lightest">
+                <div class="text-2xl font-bold mb-2">
+                  {formatPrice(zone.data.averagePrice)}
+                </div>
+                <div class="text-sm">Average Price</div>
+              </div>
+            )}
+          </div>
+
+          <!-- Key Features -->
+          {zone.data.features && zone.data.features.length > 0 && (
+            <div>
+              <h3 class="text-xl font-semibold text-primary-dark mb-4">Key Features</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {zone.data.features.map((feature) => (
+                  <div class="flex items-center space-x-3">
+                    <div class="w-2 h-2 bg-primary rounded-full"></div>
+                    <span class="text-neutral-dark">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <!-- Map without markers -->
+        <div class="relative rounded-lg overflow-hidden elegant-shadow">
+          <!-- Google Maps with Monochromatic Theme and Wider Zoom -->
+          <iframe
+            src={zone.data.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6040.9663095919355!2d-118.45!3d34.05!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a316bb8b6b5%3A0x4f5c5e5e5e5e5e5e!2sLos%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1234567890&z=10"}
+            width="100%"
+            height="400"
+            style="border:0; filter: grayscale(100%) sepia(30%) hue-rotate(20deg) saturate(60%) contrast(85%);"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            class="w-full"
+            title={`Map of ${zone.data.title}`}
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Properties Section -->
+  {zoneProperties.length > 0 && (
+    <section class="py-16 bg-primary-faint">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-primary-dark mb-4">
+            Properties in {zone.data.title}
+          </h2>
+          <p class="text-neutral max-w-2xl mx-auto">
+            Explore our exclusive collection of premium properties available in {zone.data.title}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {zoneProperties.map((property) => (
+            <PropertyCard property={property} showZone={false} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {zoneProperties.length === 0 && (
+    <section class="py-16 bg-primary-faint">
+      <div class="container mx-auto px-4">
+        <div class="text-center">
+          <div class="bg-white p-12 rounded-lg elegant-shadow max-w-2xl mx-auto">
+            <svg class="w-16 h-16 text-primary-pale mx-auto mb-6" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+            </svg>
+            <h3 class="text-2xl font-bold text-primary-dark mb-4">
+              Properties Coming Soon to {zone.data.title}
+            </h3>
+            <p class="text-neutral-dark mb-8">
+              We're currently curating exclusive properties for this premium zone. Be the first to know when new listings become available.
+            </p>
+            <a
+              href="/contact"
+              class="inline-flex items-center bg-primary-soft text-primary-lightest px-6 py-3 rounded-sm hover:bg-primary transition-colors font-medium"
+            >
+              Get Notified
+              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Related Zones Section -->
+  {relatedZones.length > 0 && (
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-primary-dark mb-4">
+            Explore Other Premium Zones
+          </h2>
+          <p class="text-neutral max-w-2xl mx-auto">
+            Discover other exclusive neighborhoods with exceptional properties
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {relatedZones.map((relatedZone) => (
+            <div class="group cursor-pointer">
+              <div class="relative overflow-hidden rounded-lg elegant-shadow hover:elegant-shadow-lg transition-all duration-300">
+                <img
+                  src={relatedZone.data.image}
+                  alt={relatedZone.data.title}
+                  class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h3 class="text-xl font-semibold mb-2">{relatedZone.data.title}</h3>
+                  <p class="text-white/90 text-sm line-clamp-2">{relatedZone.data.description}</p>
+                </div>
+              </div>
+              <a
+                href={`/zones/${relatedZone.slug}`}
+                class="block mt-4 text-center text-primary hover:text-primary-soft transition-colors font-medium"
+              >
+                Explore {relatedZone.data.title} →
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Contact Section -->
+  <section class="py-16 bg-primary">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">
+        Interested in {zone.data.title} Properties?
+      </h2>
+      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
+        Let our expert team help you find the perfect property in {zone.data.title}.
+        Contact us for personalized assistance and exclusive property viewings.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/contact"
+          class="inline-flex items-center bg-primary-soft text-primary-lightest px-6 py-3 rounded-sm hover:bg-primary transition-colors font-medium"
+        >
+          Schedule Consultation
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </a>
+        <a
+          href="/properties"
+          class="inline-flex items-center border-2 border-white text-white px-6 py-3 rounded-sm hover:bg-white hover:text-primary transition-colors font-medium"
+        >
+          Browse All Properties
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .prose {
+    line-height: 1.7;
+  }
+
+  .prose p {
+    margin-bottom: 1.5rem;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128">
+    <!-- House icon with roof, walls, door, window -->
+    <g stroke="currentColor" stroke-width="4" fill="none">
+        <!-- Roof triangle -->
+        <path d="M64 16 L16 56 L112 56 Z" fill="currentColor"/>
+        <!-- House walls -->
+        <rect x="16" y="56" width="96" height="56" fill="currentColor"/>
+        <!-- Door -->
+        <rect x="52" y="80" width="24" height="32" fill="white"/>
+        <!-- Window left -->
+        <rect x="28" y="72" width="16" height="16" fill="white"/>
+        <!-- Window right -->
+        <rect x="84" y="72" width="16" height="16" fill="white"/>
+        <!-- Chimney -->
+        <rect x="80" y="32" width="12" height="24" fill="currentColor"/>
+    </g>
+    <style>
+        g { stroke: #000; }
+        g *:not([fill="white"]) { fill: #000; }
+        @media (prefers-color-scheme: dark) {
+            g { stroke: #FFF; }
+            g *:not([fill="white"]) { fill: #FFF; }
+        }
+    </style>
+</svg>

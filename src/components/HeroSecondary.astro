@@ -1,0 +1,51 @@
+---
+export interface Props {
+  title: string;
+  subtitle?: string;
+  height?: string;
+  alignment?: 'left' | 'center' | 'right';
+  backgroundImage?: string;
+  backgroundStyle?: 'image' | 'gradient';
+}
+
+const {
+  title,
+  subtitle = "",
+  height = "h-96",
+  alignment = "left",
+  backgroundImage,
+  backgroundStyle = "gradient"
+} = Astro.props;
+
+const alignmentClasses = {
+  left: "items-start",
+  center: "items-center text-center",
+  right: "items-end text-right"
+};
+---
+
+<section class={`relative ${height} overflow-hidden`}>
+  {backgroundStyle === 'image' && backgroundImage && (
+    <div
+      class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      style={`background-image: url('${backgroundImage}')`}
+    ></div>
+  )}
+  {backgroundStyle === 'gradient' || !backgroundImage ? (
+    <div class="absolute inset-0 hero-gradient"></div>
+  ) : (
+    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60"></div>
+  )}
+  <div class="relative container mx-auto px-4 h-full flex items-center">
+    <div class={`max-w-2xl ${alignmentClasses[alignment]}`}>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+        {title}
+      </h1>
+      {subtitle && (
+        <p class="text-xl text-white/90">
+          {subtitle}
+        </p>
+      )}
+    </div>
+  </div>
+</section>

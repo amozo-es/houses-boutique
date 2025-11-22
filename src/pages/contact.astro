@@ -1,0 +1,174 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSecondary from '../components/HeroSecondary.astro';
+import ContactForm from '../components/ContactForm.astro';
+import ContactInfo from '../components/ContactInfo.astro';
+---
+
+<Layout
+  title="Contact Us - Houses Boutique"
+  description="Get in touch with Houses Boutique. Find your dream property with our expert real estate team."
+>
+  <!-- Hero Section -->
+  <HeroSecondary
+    title="Contact Us"
+    subtitle="Let our expert team help you discover the perfect property. We're here to answer your questions and guide you through your real estate journey."
+    height="h-96"
+    alignment="left"
+    backgroundImage="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1920&h=600&fit=crop&crop=entropy&auto=format"
+    backgroundStyle="image"
+  />
+
+  <!-- Map Section (Full Width) -->
+  <section class="py-8 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-primary-dark text-center mb-8">Visit Our Office</h2>
+        <div class="rounded-lg overflow-hidden elegant-shadow relative">
+          <!-- Google Maps with Monochromatic Theme -->
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.9663095919355!2d-74.0060!3d40.7128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a316bb8b6b5%3A0x4f5c5e5e5e5e5e5e!2s123%20Luxury%20Ave%2C%20New%20York%2C%20NY%2010001!5e0!3m2!1sen!2sus!4v1234567890"
+            width="100%"
+            height="400"
+            style="border:0; filter: grayscale(100%) sepia(30%) hue-rotate(20deg) saturate(60%) contrast(85%);"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            class="w-full"
+            title="Houses Boutique Office Location"
+          ></iframe>
+
+          <!-- Custom Marker Overlay -->
+          <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10">
+            <div class="relative group">
+              <!-- Marker Shadow -->
+              <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-3 bg-black opacity-20 rounded-full blur-sm"></div>
+
+              <!-- Custom House Logo Marker -->
+              <div class="relative bg-primary-700 p-3 rounded-full shadow-lg transform transition-transform group-hover:scale-110">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+              </div>
+
+              <!-- Marker Pin Point -->
+              <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary-700 rotate-45"></div>
+
+              <!-- Hover Label -->
+              <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                <p class="text-sm font-semibold text-primary-700">Houses Boutique</p>
+                <p class="text-xs text-neutral-light">123 Luxury Avenue</p>
+                <!-- Small Arrow -->
+                <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rotate-45"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center justify-center space-x-6 text-sm text-neutral-light">
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-primary-700" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+            </svg>
+            <span>123 Luxury Avenue, Prime District</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-primary-700" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+            </svg>
+            <span>Mon-Fri: 9AM-6PM</span>
+          </div>
+        </div>
+        <p class="text-center text-neutral-light mt-4 text-lg">
+          Visit our office in the heart of the city to discuss your real estate needs in person.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Content -->
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <!-- Contact Form -->
+        <ContactForm />
+
+        <!-- Contact Information -->
+        <ContactInfo />
+      </div>
+    </div>
+  </section>
+
+  <!-- Additional Information -->
+  <section class="py-16 bg-primary-pale">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold text-primary-dark text-center mb-12">
+          Why Choose Houses Boutique?
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary-faint rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-primary-dark mb-3">Expert Guidance</h3>
+            <p class="text-primary-lightest">
+              Our experienced real estate professionals provide personalized service and expert advice throughout your property journey.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary-faint rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-primary-dark mb-3">Curated Properties</h3>
+            <p class="text-primary-lightest">
+              We hand-select only the finest properties that meet our rigorous standards for quality, location, and investment potential.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary-faint rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-primary-dark mb-3">Dedicated Support</h3>
+            <p class="text-primary-lightest">
+              From initial consultation to closing, our team is committed to making your real estate experience seamless and successful.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script is:inline>
+  // Handle contact form submission
+  document.getElementById('contact-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = this;
+    const successMessage = document.getElementById('form-success');
+    const errorMessage = document.getElementById('form-error');
+
+    // Hide any existing messages
+    successMessage.classList.add('hidden');
+    errorMessage.classList.add('hidden');
+
+    // Simulate form submission (replace with actual form handling)
+    setTimeout(() => {
+      // Show success message
+      successMessage.classList.remove('hidden');
+      // Reset form
+      form.reset();
+      // Scroll to top of form
+      form.scrollIntoView({ behavior: 'smooth' });
+    }, 1000);
+  });
+</script>

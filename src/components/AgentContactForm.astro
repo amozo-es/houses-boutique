@@ -1,0 +1,206 @@
+---
+interface Props {
+  agents: Array<{
+    name: string;
+    email: string;
+    title: string;
+  }>;
+  preselectedAgent?: string;
+}
+
+const { agents, preselectedAgent = '' } = Astro.props;
+---
+
+<div id="contact-form" class="bg-white rounded-lg shadow-lg p-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl font-bold text-primary-dark mb-4">
+        Contact Our Agents
+      </h2>
+      <p class="text-neutral">
+        Get in touch with our expert real estate agents for personalized assistance
+      </p>
+    </div>
+
+    <form class="space-y-6" id="agent-contact-form">
+      <!-- Agent Selection -->
+      <div>
+        <label for="agent-select" class="block text-sm font-medium text-primary-dark mb-2">
+          Select Agent <span class="text-red-500">*</span>
+        </label>
+        <select
+          id="agent-select"
+          name="agent"
+          required
+          class="w-full px-4 py-2 border border-primary-faint rounded-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+        >
+          <option value="">Choose an agent...</option>
+          {agents.map((agent) => (
+            <option
+              value={agent.name}
+              selected={agent.name === preselectedAgent}
+            >
+              {agent.name} - {agent.title}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- First Name -->
+        <div>
+          <label for="first-name" class="block text-sm font-medium text-primary-dark mb-2">
+            First Name <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="first-name"
+            name="firstName"
+            required
+            class="w-full px-4 py-2 border border-primary-faint rounded-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            placeholder="John"
+          />
+        </div>
+
+        <!-- Last Name -->
+        <div>
+          <label for="last-name" class="block text-sm font-medium text-primary-dark mb-2">
+            Last Name <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="last-name"
+            name="lastName"
+            required
+            class="w-full px-4 py-2 border border-primary-faint rounded-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            placeholder="Doe"
+          />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-primary-dark mb-2">
+          Email Address <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="w-full px-4 py-2 border border-primary-faint rounded-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          placeholder="john.doe@example.com"
+        />
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <label for="phone" class="block text-sm font-medium text-primary-dark mb-2">
+          Phone Number
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          class="w-full px-4 py-2 border border-primary-faint rounded-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          placeholder="+1 (555) 123-4567"
+        />
+      </div>
+
+      <!-- Message Type -->
+      <div>
+        <label for="message-type" class="block text-sm font-medium text-primary-dark mb-2">
+          How can we help you? <span class="text-red-500">*</span>
+        </label>
+        <select
+          id="message-type"
+          name="messageType"
+          required
+          class="w-full px-4 py-2 border border-primary-faint rounded-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+        >
+          <option value="">Select a service...</option>
+          <option value="buying">I'm looking to buy a property</option>
+          <option value="selling">I want to sell my property</option>
+          <option value="renting">I'm interested in renting</option>
+          <option value="investing">I'm looking for investment properties</option>
+          <option value="consultation">I need a market consultation</option>
+          <option value="other">Other inquiry</option>
+        </select>
+      </div>
+
+      <!-- Message -->
+      <div>
+        <label for="message" class="block text-sm font-medium text-primary-dark mb-2">
+          Message <span class="text-red-500">*</span>
+        </label>
+        <textarea
+          id="message"
+          name="message"
+          rows={4}
+          required
+          class="w-full px-4 py-2 border border-primary-faint rounded-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          placeholder="Tell us about your real estate needs..."
+        ></textarea>
+      </div>
+
+      <!-- Preferred Contact Method -->
+      <div>
+        <label class="block text-sm font-medium text-primary-dark mb-2">
+          Preferred Contact Method <span class="text-red-500">*</span>
+        </label>
+        <div class="flex space-x-4">
+          <label class="flex items-center">
+            <input
+              type="radio"
+              name="contactMethod"
+              value="email"
+              checked
+              class="mr-2 text-primary focus:ring-primary"
+            />
+            <span class="text-sm">Email</span>
+          </label>
+          <label class="flex items-center">
+            <input
+              type="radio"
+              name="contactMethod"
+              value="phone"
+              class="mr-2 text-primary focus:ring-primary"
+            />
+            <span class="text-sm">Phone</span>
+          </label>
+          <label class="flex items-center">
+            <input
+              type="radio"
+              name="contactMethod"
+              value="both"
+              class="mr-2 text-primary focus:ring-primary"
+            />
+            <span class="text-sm">Either</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="pt-4">
+        <button
+          type="submit"
+          class="w-full bg-primary text-white py-3 px-6 rounded-sm font-medium hover:bg-primary-soft transition-colors"
+        >
+          Send Message
+        </button>
+      </div>
+
+      <!-- Privacy Note -->
+      <p class="text-xs text-neutral-light text-center">
+        By submitting this form, you agree to be contacted by our agents regarding your real estate inquiry.
+        We respect your privacy and will never share your information with third parties.
+      </p>
+    </form>
+  </div>
+</div>
+
+<style>
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+// Hero Component
+// Versatile hero section for different pages
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  image?: string;
+  overlay?: boolean;
+  height?: 'small' | 'medium' | 'large' | 'full';
+  alignment?: 'left' | 'center' | 'right';
+  showCta?: boolean;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
+const {
+  title,
+  subtitle,
+  image,
+  overlay = true,
+  height = 'large',
+  alignment = 'left',
+  showCta = true,
+  ctaText = "Explore Properties",
+  ctaLink = "/properties"
+} = Astro.props;
+
+// Height classes
+const heightClasses = {
+  small: 'h-64',
+  medium: 'h-96',
+  large: 'h-[32rem]',
+  full: 'h-screen'
+};
+
+// Alignment classes
+const alignmentClasses = {
+  left: 'text-left items-start',
+  center: 'text-center items-center',
+  right: 'text-right items-end'
+};
+---
+
+<!-- Hero Component -->
+<section
+  class={`relative ${heightClasses[height]} flex items-center justify-end overflow-hidden`}
+>
+  <!-- Background Image -->
+  {image ? (
+    <>
+      <img
+        src={image}
+        alt={title}
+        class="absolute inset-0 w-full h-full object-cover"
+        loading="eager"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      />
+      <div class="absolute inset-0 hero-gradient" style="display: none;">
+        <p class="text-white text-center flex items-center justify-center h-full">Image loading failed</p>
+      </div>
+    </>
+  ) : (
+    <div class="absolute inset-0 hero-gradient"></div>
+  )}
+
+  <!-- Overlay -->
+  {overlay && (
+    <div class="absolute inset-0 bg-black/20"></div>
+  )}
+
+  <!-- Content -->
+  <div class={`relative z-10 container mx-auto px-4 ${alignmentClasses[alignment]} flex flex-col max-w-4xl`}>
+    <div class="max-w-2xl">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+        {title}
+      </h1>
+
+      {subtitle && (
+        <p class="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
+          {subtitle}
+        </p>
+      )}
+
+      {showCta && ctaLink && (
+        <a
+          href={ctaLink}
+          class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-sm hover:bg-primary-soft transition-colors font-medium text-lg self-start"
+        >
+          {ctaText}
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      )}
+    </div>
+  </div>
+
+  <!-- Scroll Indicator (only for full height heroes) -->
+  {height === 'full' && (
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+    </div>
+  )}
+</section>
+
+<style>
+  section {
+    scroll-margin-top: 0;
+  }
+</style>

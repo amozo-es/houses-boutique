@@ -1,0 +1,111 @@
+---
+interface Props {
+  agent: {
+    title: string;
+    name: string;
+    jobTitle: string;
+    bio: string;
+    email: string;
+    phone: string;
+    image: string;
+    languages: string[];
+    specialties: string[];
+    experience: string;
+  };
+  onSelectAgent: (agentName: string) => void;
+  selected?: boolean;
+}
+
+const { agent, onSelectAgent, selected = false } = Astro.props;
+---
+
+<div class={`bg-white rounded-lg border-2 transition-all duration-300 overflow-hidden ${
+  selected
+    ? 'border-primary shadow-lg'
+    : 'border-primary-faint hover:border-primary hover:elegant-shadow'
+}`}>
+  <!-- Agent Image -->
+  <div class="relative">
+    <img
+      src={agent.image}
+      alt={`${agent.name} - ${agent.jobTitle}`}
+      class="w-full h-64 object-cover"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+    <div class="absolute bottom-4 left-4 text-white">
+      <h3 class="text-xl font-bold">{agent.name}</h3>
+      <p class="text-sm opacity-90">{agent.jobTitle}</p>
+    </div>
+  </div>
+
+  <!-- Agent Info -->
+  <div class="p-6">
+    <!-- Bio -->
+    <p class="text-neutral-dark mb-4 line-clamp-3 text-sm leading-relaxed">
+      {agent.bio}
+    </p>
+
+    <!-- Experience -->
+    <div class="flex items-center mb-4">
+      <svg class="w-5 h-5 text-primary mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+      </svg>
+      <span class="text-primary-dark font-medium">{agent.experience}</span>
+    </div>
+
+    <!-- Languages -->
+    <div class="mb-4">
+      <div class="flex items-center mb-2">
+        <svg class="w-5 h-5 text-primary mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389c-.188-.196-.373-.396-.554-.6a19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.764l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z" clip-rule="evenodd"/>
+        </svg>
+        <span class="text-primary-dark font-medium">Languages:</span>
+      </div>
+      <div class="flex flex-wrap gap-1">
+        {agent.languages.map((lang) => (
+          <span class="px-2 py-1 bg-primary-faint text-primary-dark text-xs rounded-full">
+            {lang}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- Specialties -->
+    <div class="mb-6">
+      <div class="flex items-center mb-2">
+        <svg class="w-5 h-5 text-primary mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+        </svg>
+        <span class="text-primary-dark font-medium">Specialties:</span>
+      </div>
+      <div class="flex flex-wrap gap-1">
+        {agent.specialties.map((specialty) => (
+          <span class="px-2 py-1 bg-neutral-100 text-neutral-dark text-xs rounded-full">
+            {specialty}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- Contact Button -->
+    <button
+      onclick={`selectAgent('${agent.name}')`}
+      class={`w-full py-3 px-4 rounded-sm font-medium transition-colors ${
+        selected
+          ? 'bg-primary text-white'
+          : 'bg-primary text-white hover:bg-primary-soft'
+      }`}
+    >
+      {selected ? 'Selected Agent' : 'Contact Agent'}
+    </button>
+  </div>
+</div>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

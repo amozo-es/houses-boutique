@@ -1,0 +1,134 @@
+---
+// Property Card Component
+// Displays property information in a card format for listing pages
+
+import type { CollectionEntry } from 'astro:content';
+import { Bed, Bath, Ruler } from '@lucide/astro';
+
+interface Props {
+  property: CollectionEntry<'properties'>;
+  showZone?: boolean;
+  compact?: boolean;
+}
+
+const { property, showZone = true, compact = false } = Astro.props;
+
+const formatPrice = (price: number, currency: string = 'USD') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+    maximumFractionDigits: 0
+  }).format(price);
+};
+
+const getStatusBadgeClass = (status: string) => {
+  switch (status) {
+    case 'sold':
+      return 'bg-red-100 text-red-800';
+    case 'pending':
+      return 'bg-yellow-100 text-yellow-800';
+    default:
+      return 'bg-primary-faint text-primary-dark';
+  }
+};
+---
+
+<!-- Property Card Component -->
+<article class="bg-white rounded-lg overflow-hidden elegant-shadow hover:elegant-shadow-lg transition-shadow duration-300">
+  <!-- Image Section -->
+  <div class="relative">
+    <img
+      src={property.data.image}
+      alt={property.data.title}
+      class="w-full h-48 object-cover"
+      loading="lazy"
+    />
+
+    <!-- Status Badge -->
+    {property.data.status !== 'available' && (
+      <div class={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(property.data.status)}`}>
+        {property.data.status.charAt(0).toUpperCase() + property.data.status.slice(1)}
+      </div>
+    )}
+
+    <!-- Featured Badge -->
+    {property.data.featured && (
+      <div class="absolute top-3 right-3 bg-primary-soft text-primary-lightest px-3 py-1 rounded-full text-xs font-medium">
+        Featured
+      </div>
+    )}
+  </div>
+
+  <!-- Content Section -->
+  <div class="p-4">
+    <!-- Price -->
+    <div class="flex items-baseline gap-2 mb-2">
+      <span class="text-2xl font-bold text-primary-dark">
+        {formatPrice(property.data.price, property.data.currency)}
+      </span>
+      {property.data.originalPrice && property.data.originalPrice > property.data.price && (
+        <span class="text-sm text-neutral-light line-through">
+          {formatPrice(property.data.originalPrice, property.data.currency)}
+        </span>
+      )}
+    </div>
+
+    <!-- Title -->
+    <h3 class="text-lg font-semibold text-neutral-dark mb-1">
+      <a href={`/properties/${property.slug}`} class="hover:text-primary transition-colors">
+        {property.data.title}
+      </a>
+    </h3>
+
+    <!-- Location -->
+    <div class="flex items-center text-sm text-neutral-light mb-3">
+      <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+      </svg>
+      {property.data.location.address}
+    </div>
+
+    <!-- Property Specs -->
+    <div class="flex items-center justify-between text-sm text-neutral-dark mb-3">
+      <div class="flex items-center">
+        <Bed class="w-4 h-4 mr-1 text-primary-pale" />
+        <span>{property.data.bedrooms} Beds</span>
+      </div>
+
+      <div class="flex items-center">
+        <Bath class="w-4 h-4 mr-1 text-primary-pale" />
+        <span>{property.data.bathrooms} Baths</span>
+      </div>
+
+      <div class="flex items-center">
+        <Ruler class="w-4 h-4 mr-1 text-primary-pale" />
+        <span>{property.data.size} {property.data.sizeUnit}</span>
+      </div>
+    </div>
+
+    <!-- Zone (if shown) -->
+    {showZone && (
+      <div class="text-xs text-primary-pale font-medium uppercase tracking-wide">
+        {property.data.zone}
+      </div>
+    )}
+
+    <!-- CTA Button -->
+    <a
+      href={`/properties/${property.slug}`}
+      class="block w-full text-center bg-primary-soft text-primary-lightest py-2 rounded-sm hover:bg-primary transition-colors mt-4"
+    >
+      View Details
+    </a>
+  </div>
+</article>
+
+<style>
+  article {
+    transition: all 0.3s ease;
+  }
+
+  article:hover {
+    transform: translateY(-2px);
+  }
+</style>

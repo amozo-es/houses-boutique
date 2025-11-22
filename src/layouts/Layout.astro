@@ -1,0 +1,195 @@
+---
+import '../styles/global.css'
+import FooterCredit from '../components/FooterCredit.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  meta?: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+  };
+}
+
+const {
+  title,
+  description = "Discover exclusive properties in prime locations",
+  image = "/og-image.jpg",
+  canonical,
+  meta = {}
+} = Astro.props;
+
+// Use meta title if provided, otherwise fall back to title
+const seoTitle = meta.title || title;
+const seoDescription = meta.description || description;
+
+// Generate canonical URL if not provided
+const canonicalUrl = canonical || new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={seoDescription} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{seoTitle}</title>
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Keywords Meta Tag -->
+    {meta.keywords && meta.keywords.length > 0 && (
+      <meta name="keywords" content={meta.keywords.join(', ')} />
+    )}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={seoTitle} />
+    <meta property="og:description" content={seoDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    {image && <meta property="og:image" content={image} />}
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content={seoTitle} />
+    <meta property="twitter:description" content={seoDescription} />
+    <meta property="twitter:url" content={canonicalUrl} />
+    {image && <meta property="twitter:image" content={image} />}
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Navigation Header -->
+    <header class="bg-white border-b border-primary-faint sticky top-0 z-50">
+      <nav class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <!-- Logo -->
+          <a href="/" class="flex items-center space-x-2">
+            <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="text-xl font-semibold text-primary">Houses Boutique</span>
+          </a>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="/" class="text-neutral-dark hover:text-primary transition-colors">Home</a>
+            <a href="/properties" class="text-neutral-dark hover:text-primary transition-colors">Properties</a>
+            <a href="/agents" class="text-neutral-dark hover:text-primary transition-colors">Agents</a>
+            <a href="/zones" class="text-neutral-dark hover:text-primary transition-colors">Zones</a>
+            <a href="/about" class="text-neutral-dark hover:text-primary transition-colors">About</a>
+            <a href="/contact" class="bg-primary-soft text-primary-lightest px-4 py-2 rounded-sm hover:bg-primary transition-colors">
+              Contact
+            </a>
+          </div>
+
+          <!-- Mobile menu button -->
+          <button id="mobile-menu-button" class="md:hidden p-2">
+            <svg class="w-6 h-6 text-neutral-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden pt-4 pb-2">
+          <div class="flex flex-col space-y-2">
+            <a href="/" class="text-neutral-dark hover:text-primary transition-colors py-2">Home</a>
+            <a href="/properties" class="text-neutral-dark hover:text-primary transition-colors py-2">Properties</a>
+            <a href="/zones" class="text-neutral-dark hover:text-primary transition-colors py-2">Zones</a>
+            <a href="/about" class="text-neutral-dark hover:text-primary transition-colors py-2">About</a>
+            <a href="/contact" class="bg-primary-soft text-primary-lightest px-4 py-2 rounded-sm hover:bg-primary transition-colors inline-block">
+              Contact
+            </a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-neutral-dark text-white py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <!-- Company Info -->
+          <div class="col-span-1 md:col-span-2">
+            <div class="flex items-center space-x-2 mb-4">
+              <svg class="w-6 h-6 text-primary-pale" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+              </svg>
+              <span class="text-lg font-semibold">Houses Boutique</span>
+            </div>
+            <p class="text-neutral-light text-sm leading-relaxed">
+              Discover exclusive properties in prime locations. Our curated selection represents the finest real estate opportunities for discerning clients seeking luxury and sophistication.
+            </p>
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h3 class="text-white font-semibold mb-4">Quick Links</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/properties" class="text-neutral-light hover:text-primary-pale transition-colors">Featured Properties</a></li>
+              <li><a href="/zones" class="text-neutral-light hover:text-primary-pale transition-colors">Exclusive Zones</a></li>
+              <li><a href="/about" class="text-neutral-light hover:text-primary-pale transition-colors">About Us</a></li>
+              <li><a href="/contact" class="text-neutral-light hover:text-primary-pale transition-colors">Contact</a></li>
+            </ul>
+          </div>
+
+          <!-- Contact -->
+          <div>
+            <h3 class="text-white font-semibold mb-4">Contact</h3>
+            <ul class="space-y-2 text-sm text-neutral-light">
+              <li class="flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                </svg>
+                <span>info@housesboutique.com</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                </svg>
+                <span>+1 (555) 123-4567</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-neutral-700 mt-8 pt-8 text-center text-sm text-neutral-light">
+          <p>&copy; {new Date().getFullYear()} Houses Boutique. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Footer Credit Section -->
+    <FooterCredit
+      showGithub={true}
+      creatorName="Your Name"
+      creatorUrl="https://yourwebsite.com"
+      repositoryUrl="https://github.com/yourusername/housesboutique-theme"
+    />
+
+    <script>
+      // Mobile menu toggle
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    </script>
+  </body>
+</html>    

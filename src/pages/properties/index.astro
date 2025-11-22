@@ -1,0 +1,479 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PropertyCard from '../../components/PropertyCard.astro';
+import { getCollection } from 'astro:content';
+
+// Get all properties and zones
+const allProperties = await getCollection('properties');
+const zones = await getCollection('zones');
+
+// Helper function to format price
+const formatPrice = (price: number, currency: string = 'USD') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+    maximumFractionDigits: 0
+  }).format(price);
+};
+
+// Get unique values for filters
+const uniqueZones = [...new Set(allProperties.map(p => p.data.zone))];
+const minPrice = Math.min(...allProperties.map(p => p.data.price));
+const maxPrice = Math.max(...allProperties.map(p => p.data.price));
+const maxBedrooms = Math.max(...allProperties.map(p => p.data.bedrooms));
+const maxBathrooms = Math.max(...allProperties.map(p => p.data.bathrooms));
+
+// Pagination
+const PROPERTIES_PER_PAGE = 9;
+const currentPage = 1; // In a real app, this would come from URL params
+const totalPages = Math.ceil(allProperties.length / PROPERTIES_PER_PAGE);
+const startIndex = (currentPage - 1) * PROPERTIES_PER_PAGE;
+const endIndex = startIndex + PROPERTIES_PER_PAGE;
+const paginatedProperties = allProperties.slice(startIndex, endIndex);
+---
+
+<Layout
+  title="Properties - Houses Boutique"
+  description="Browse our exclusive collection of premium properties in prime locations. Find your dream home today."
+>
+  <!-- Hero Section -->
+  <section class="relative h-96 overflow-hidden">
+    <div class="absolute inset-0 hero-gradient"></div>
+    <div class="relative container mx-auto px-4 h-full flex items-center">
+      <div class="max-w-2xl">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+          Exclusive Properties
+        </h1>
+        <p class="text-xl text-white/90">
+          Discover our curated selection of luxury homes in the most sought-after neighborhoods
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Advanced Filters Section -->
+  <section class="py-8 bg-white border-b border-primary-faint">
+    <div class="container mx-auto px-4">
+      <!-- Filter Controls -->
+      <div class="bg-primary-soft p-6 rounded-lg mb-6 text-primary-lightest">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold">Filter Properties</h2>
+          <button id="clear-filters" class="bg-white text-primary px-4 py-2 rounded-sm border border-primary hover:bg-primary hover:text-white transition-colors text-sm font-medium">
+            Clear All Filters
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <!-- Zone Filter -->
+          <div>
+            <label class="block text-sm font-medium text-neutral-dark mb-2">Zone</label>
+            <select id="zone-filter" class="filter-select">
+              <option value="">All Zones</option>
+              {uniqueZones.map(zone => (
+                <option value={zone}>{zone}</option>
+              ))}
+            </select>
+          </div>
+
+          <!-- Price Range -->
+          <div>
+            <label class="block text-sm font-medium text-neutral-dark mb-2">Min Price</label>
+            <select id="min-price-filter" class="filter-select">
+              <option value="">No Min</option>
+              <option value="500000">$500,000</option>
+              <option value="1000000">$1,000,000</option>
+              <option value="2000000">$2,000,000</option>
+              <option value="5000000">$5,000,000</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-neutral-dark mb-2">Max Price</label>
+            <select id="max-price-filter" class="filter-select">
+              <option value="">No Max</option>
+              <option value="1000000">$1,000,000</option>
+              <option value="2000000">$2,000,000</option>
+              <option value="5000000">$5,000,000</option>
+              <option value="10000000">$10,000,000</option>
+            </select>
+          </div>
+
+          <!-- Bedrooms -->
+          <div>
+            <label class="block text-sm font-medium text-neutral-dark mb-2">Bedrooms</label>
+            <select id="bedrooms-filter" class="filter-select">
+              <option value="">Any</option>
+              {Array.from({length: maxBedrooms}, (_, i) => i + 1).map(num => (
+                <option value={num}>{num}+ {num === 1 ? 'Bedroom' : 'Bedrooms'}</option>
+              ))}
+            </select>
+          </div>
+
+          <!-- Bathrooms -->
+          <div>
+            <label class="block text-sm font-medium text-neutral-dark mb-2">Bathrooms</label>
+            <select id="bathrooms-filter" class="filter-select">
+              <option value="">Any</option>
+              {Array.from({length: maxBathrooms}, (_, i) => i + 1).map(num => (
+                <option value={num}>{num}+ {num === 1 ? 'Bathroom' : 'Bathrooms'}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sort and Results Count -->
+      <div class="flex items-center justify-between">
+        <div class="text-neutral-dark">
+          <span id="results-count" class="font-medium">Showing {allProperties.length} Properties</span>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <label class="text-sm font-medium text-neutral-dark">Sort by:</label>
+          <select id="sort-select" class="filter-select">
+            <option value="featured">Featured</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="newest">Newest First</option>
+            <option value="bedrooms">Most Bedrooms</option>
+            <option value="size">Largest Size</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Properties Grid -->
+  <section class="py-12 bg-primary-faint">
+    <div class="container mx-auto px-4">
+      {paginatedProperties.length > 0 ? (
+        <div id="properties-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {paginatedProperties.map((property) => (
+            <PropertyCard property={property} />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <svg class="w-16 h-16 text-primary-pale mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+          </svg>
+          <h3 class="text-xl font-semibold text-primary-dark mb-2">No Properties Found</h3>
+          <p class="text-neutral-light mb-6">Try adjusting your filters or search criteria</p>
+          <button class="bg-primary text-white px-6 py-3 rounded-sm hover:bg-primary-soft transition-colors font-medium">
+            Clear Filters
+          </button>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Pagination -->
+  {totalPages > 1 && (
+    <section class="py-8 bg-white border-t border-primary-faint">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-neutral-light">
+            Showing {startIndex + 1}-{Math.min(endIndex, allProperties.length)} of {allProperties.length} properties
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <button class="px-3 py-1 border border-neutral-300 rounded-md text-neutral-dark hover:border-primary hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed" disabled={currentPage === 1}>
+              Previous
+            </button>
+
+            {Array.from({length: totalPages}, (_, i) => i + 1).map(page => (
+              <button class={`px-3 py-1 border rounded-md ${currentPage === page ? 'bg-primary text-white border-primary' : 'border-neutral-300 text-neutral-dark hover:border-primary hover:text-primary'}`}>
+                {page}
+              </button>
+            ))}
+
+            <button class="px-3 py-1 border border-neutral-300 rounded-md text-neutral-dark hover:border-primary hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed" disabled={currentPage === totalPages}>
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA Section -->
+  <section class="py-16 bg-primary">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">
+        Can't Find What You're Looking For?
+      </h2>
+      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
+        Let our expert team help you find the perfect property. We have access to exclusive listings not shown here.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/contact"
+          class="inline-flex items-center bg-white text-primary px-6 py-3 rounded-sm hover:bg-neutral-50 transition-colors font-medium"
+        >
+          Contact Our Team
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </a>
+        <a
+          href="/zones"
+          class="inline-flex items-center border-2 border-white text-white px-6 py-3 rounded-sm hover:bg-white hover:text-primary transition-colors font-medium"
+        >
+          Explore Zones
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* Custom Select Styles */
+  .filter-select {
+    width: 100%;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    border: 1px solid #d4d4d4;
+    border-radius: 0.375rem;
+    background-color: white;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #262626;
+    transition: all 0.15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .filter-select:hover {
+    border-color: #4f5b3c;
+    background-color: #fafafa;
+  }
+
+  .filter-select:focus {
+    outline: none;
+    border-color: #4f5b3c;
+    box-shadow: 0 0 0 2px rgba(79, 91, 60, 0.2);
+    background-color: white;
+  }
+
+  .filter-select option {
+    background-color: white;
+    color: #262626;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .filter-select option:hover,
+  .filter-select option:checked,
+  .filter-select option:focus {
+    background-color: #e8ede1;
+    color: #4f5b3c;
+  }
+
+  /* Webkit browsers (Chrome, Safari, Edge) */
+  .filter-select::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+  }
+
+  /* Firefox styling */
+  .filter-select option:active,
+  .filter-select option:focus-visible {
+    background-color: #e8ede1 !important;
+    color: #4f5b3c !important;
+  }
+
+  .filter-select:disabled {
+    background-color: #f5f5f5;
+    color: #a3a3a3;
+    cursor: not-allowed;
+  }
+
+  .filter-select:disabled:hover {
+    border-color: #d4d4d4;
+    background-color: #f5f5f5;
+  }
+
+  /* Ensure proper dropdown arrow in all browsers */
+  .filter-select::-ms-expand {
+    display: none;
+  }
+
+  /* Custom scrollbar for dropdowns in Webkit browsers */
+  .filter-select::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .filter-select::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  .filter-select::-webkit-scrollbar-thumb {
+    background: #96ab7c;
+    border-radius: 4px;
+  }
+
+  .filter-select::-webkit-scrollbar-thumb:hover {
+    background: #7a8c5e;
+  }
+</style>
+
+<script>
+  // Filter and Sort functionality
+  let allProperties = JSON.parse(`{{JSON.stringify(allProperties.map(p => ({
+    ...p.data,
+    slug: p.slug,
+    price: p.data.price
+  })))}}`);
+
+  let filteredProperties = [...allProperties];
+  let currentPage = 1;
+  const propertiesPerPage = 9;
+
+  // Get filter elements
+  const zoneFilter = document.getElementById('zone-filter');
+  const minPriceFilter = document.getElementById('min-price-filter');
+  const maxPriceFilter = document.getElementById('max-price-filter');
+  const bedroomsFilter = document.getElementById('bedrooms-filter');
+  const bathroomsFilter = document.getElementById('bathrooms-filter');
+  const sortSelect = document.getElementById('sort-select');
+  const clearFiltersBtn = document.getElementById('clear-filters');
+  const propertiesGrid = document.getElementById('properties-grid');
+  const resultsCount = document.getElementById('results-count');
+
+  function applyFilters() {
+    filteredProperties = allProperties.filter(property => {
+      // Zone filter
+      if (zoneFilter.value && property.zone !== zoneFilter.value) {
+        return false;
+      }
+
+      // Price filter
+      const minPrice = parseInt(minPriceFilter.value) || 0;
+      const maxPrice = parseInt(maxPriceFilter.value) || Infinity;
+      if (property.price < minPrice || property.price > maxPrice) {
+        return false;
+      }
+
+      // Bedrooms filter
+      if (bedroomsFilter.value && property.bedrooms < parseInt(bedroomsFilter.value)) {
+        return false;
+      }
+
+      // Bathrooms filter
+      if (bathroomsFilter.value && property.bathrooms < parseInt(bathroomsFilter.value)) {
+        return false;
+      }
+
+      return true;
+    });
+
+    applySorting();
+    renderProperties();
+  }
+
+  function applySorting() {
+    const sortBy = sortSelect.value;
+
+    switch(sortBy) {
+      case 'price-low':
+        filteredProperties.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filteredProperties.sort((a, b) => b.price - a.price);
+        break;
+      case 'bedrooms':
+        filteredProperties.sort((a, b) => b.bedrooms - a.bedrooms);
+        break;
+      case 'size':
+        filteredProperties.sort((a, b) => b.size - a.size);
+        break;
+      case 'newest':
+        filteredProperties.sort((a, b) => new Date(b.date || '2023-01-01') - new Date(a.date || '2023-01-01'));
+        break;
+      case 'featured':
+      default:
+        filteredProperties.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+        break;
+    }
+  }
+
+  function renderProperties() {
+    // Update results count
+    if (resultsCount) {
+      resultsCount.textContent = `Showing ${filteredProperties.length} Properties`;
+    }
+
+    if (filteredProperties.length === 0) {
+      if (propertiesGrid) {
+        propertiesGrid.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <svg class="w-16 h-16 text-primary-pale mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+            </svg>
+            <h3 class="text-xl font-semibold text-primary-dark mb-2">No Properties Found</h3>
+            <p class="text-neutral-light mb-6">Try adjusting your filters or search criteria</p>
+            <button class="bg-primary text-white px-6 py-3 rounded-sm hover:bg-primary-soft transition-colors font-medium" onclick="clearAllFilters()">
+              Clear Filters
+            </button>
+          </div>
+        `;
+      }
+      return;
+    }
+
+    // For this demo, we'll just reload the page to show filtered results
+    // In a real app, you'd render the properties dynamically
+    console.log('Filtered properties:', filteredProperties.length);
+  }
+
+  function clearAllFilters() {
+    console.log('Clearing all filters...');
+
+    // Reset all filter values
+    zoneFilter.value = '';
+    minPriceFilter.value = '';
+    maxPriceFilter.value = '';
+    bedroomsFilter.value = '';
+    bathroomsFilter.value = '';
+    sortSelect.value = 'featured';
+
+    // Reset filtered properties to all properties
+    filteredProperties = [...allProperties];
+
+    // Update UI
+    if (resultsCount) {
+      resultsCount.textContent = `Showing ${allProperties.length} Properties`;
+    }
+
+    // Restore original properties grid
+    location.reload(); // Simple solution for demo
+  }
+
+  // Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', function() {
+    // Event listeners for filters
+    [zoneFilter, minPriceFilter, maxPriceFilter, bedroomsFilter, bathroomsFilter, sortSelect].forEach(element => {
+      if (element) {
+        element.addEventListener('change', applyFilters);
+      }
+    });
+
+    // Event listener for clear filters button
+    if (clearFiltersBtn) {
+      clearFiltersBtn.addEventListener('click', clearAllFilters);
+    }
+  });
+</script>

@@ -1,0 +1,265 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import PropertyCard from '../../components/PropertyCard.astro';
+
+// Get all zones and properties
+const zones = await getCollection('zones');
+const allProperties = await getCollection('properties');
+
+// Helper function to format price
+const formatPrice = (price: number, currency: string = 'USD') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+    maximumFractionDigits: 0
+  }).format(price);
+};
+
+// Function to get 3 featured properties for each zone
+const getZoneProperties = (zoneTitle: string, limit: number = 3) => {
+  return allProperties
+    .filter(property => property.data.zone === zoneTitle)
+    .slice(0, limit);
+};
+---
+
+<Layout
+  title="Premium Zones - Houses Boutique"
+  description="Explore our exclusive collection of premium neighborhoods and zones. Find properties in the most sought-after locations."
+>
+  <!-- Hero Section -->
+  <section class="relative h-96 overflow-hidden">
+    <div class="absolute inset-0 hero-gradient"></div>
+    <div class="relative container mx-auto px-4 h-full flex items-center">
+      <div class="max-w-2xl">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+          Premium Zones
+        </h1>
+        <p class="text-xl text-white/90">
+          Discover our curated selection of exclusive neighborhoods and prime locations
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Zone Navigation -->
+  <section class="py-8 bg-white border-b border-primary-faint sticky top-16 z-40">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-wrap items-center gap-4">
+        <span class="text-neutral-dark font-medium">Explore Zones:</span>
+        <div class="flex flex-wrap gap-2">
+          {zones.map((zone) => (
+            <a
+              href={`#${zone.slug}`}
+              class="px-4 py-2 rounded-full border border-neutral-300 text-neutral-dark hover:border-primary hover:text-primary transition-colors"
+            >
+              {zone.data.title}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- All Zones Section -->
+  {zones.map((zone) => {
+    const zoneProperties = getZoneProperties(zone.data.title);
+    return (
+      <section id={zone.slug} class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+          <!-- Zone Header with Map -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+            <!-- Zone Info -->
+            <div class="space-y-6">
+              <h2 class="text-3xl md:text-4xl font-bold text-primary-dark">
+                {zone.data.title}
+              </h2>
+
+              <p class="text-lg text-neutral-dark leading-relaxed">
+                {zone.data.description}
+              </p>
+
+              <div class="space-y-4">
+                {zone.data.features && zone.data.features.length > 0 && (
+                  <div>
+                    <h3 class="text-xl font-semibold text-primary-dark mb-3">Key Features</h3>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {zone.data.features.map((feature) => (
+                        <li class="flex items-center space-x-3">
+                          <div class="w-2 h-2 bg-primary rounded-full"></div>
+                          <span class="text-neutral-dark">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {zone.data.averagePrice && (
+                  <div class="bg-primary-soft p-6 rounded-lg text-primary-lightest">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <p class="text-sm font-medium">Average Property Price</p>
+                        <p class="text-2xl font-bold">
+                          {formatPrice(zone.data.averagePrice)}
+                        </p>
+                      </div>
+                      {zone.data.propertyCount && (
+                        <div class="text-right">
+                          <p class="text-sm font-medium">Available Properties</p>
+                          <p class="text-2xl font-bold">
+                            {zone.data.propertyCount}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <a
+                  href={`/zones/${zone.slug}`}
+                  class="inline-flex items-center bg-primary-soft text-primary-lightest px-6 py-3 rounded-sm hover:bg-primary transition-colors font-medium"
+                >
+                  Explore {zone.data.title}
+                  <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Map without markers -->
+            <div class="relative rounded-lg overflow-hidden elegant-shadow">
+              <!-- Google Maps with Monochromatic Theme and Wider Zoom -->
+              <iframe
+                src={zone.data.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6040.9663095919355!2d-118.45!3d34.05!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a316bb8b6b5%3A0x4f5c5e5e5e5e5e5e!2sLos%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1234567890&z=10"}
+                width="100%"
+                height="500"
+                style="border:0; filter: grayscale(100%) sepia(30%) hue-rotate(20deg) saturate(60%) contrast(85%);"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                class="w-full"
+                title={`Map of ${zone.data.title}`}
+              ></iframe>
+            </div>
+          </div>
+
+          <!-- Featured Properties in this Zone -->
+          {zoneProperties.length > 0 && (
+            <div class="border-t border-primary-faint pt-12">
+              <div class="flex items-center justify-between mb-8">
+                <h3 class="text-2xl font-semibold text-primary-dark">
+                  Featured Properties in {zone.data.title}
+                </h3>
+                <a
+                  href={`/zones/${zone.slug}`}
+                  class="text-primary hover:text-primary-soft transition-colors font-medium flex items-center"
+                >
+                  View All Properties
+                  <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {zoneProperties.map((property) => (
+                  <PropertyCard property={property} showZone={false} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {zoneProperties.length === 0 && (
+            <div class="border-t border-primary-faint pt-12 text-center">
+              <div class="bg-primary-soft p-8 rounded-lg text-primary-lightest">
+                <svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                </svg>
+                <p class="font-medium mb-2">Properties Coming Soon</p>
+                <p class="text-sm">Exclusive properties in {zone.data.title} will be available shortly.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  })}
+
+  <!-- Call to Action -->
+  <section class="py-16 bg-primary">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">
+        Find Your Perfect Location
+      </h2>
+      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
+        Let our expert team help you discover the perfect property in these exclusive zones.
+        Contact us to schedule a viewing or get more information.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/contact"
+          class="inline-flex items-center bg-primary-soft text-primary-lightest px-6 py-3 rounded-sm hover:bg-primary transition-colors font-medium"
+        >
+          Contact Our Team
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </a>
+        <a
+          href="/properties"
+          class="inline-flex items-center border-2 border-white text-white px-6 py-3 rounded-sm hover:bg-white hover:text-primary transition-colors font-medium"
+        >
+          Browse All Properties
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+
+  // Highlight active zone on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const filterLinks = document.querySelectorAll('a[href^="#"]');
+
+  const observerOptions = {
+    rootMargin: '-100px 0px -70% 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Update active filter link
+        filterLinks.forEach(link => {
+          link.classList.remove('bg-primary', 'text-white');
+          link.classList.add('border-neutral-300', 'text-neutral-dark');
+        });
+
+        const activeLink = document.querySelector(`a[href="#${entry.target.id}"]`);
+        if (activeLink) {
+          activeLink.classList.remove('border-neutral-300', 'text-neutral-dark');
+          activeLink.classList.add('bg-primary', 'text-white');
+        }
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+</script>

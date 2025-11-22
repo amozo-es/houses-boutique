@@ -1,0 +1,223 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AgentCard from '../components/AgentCard.astro';
+import AgentContactForm from '../components/AgentContactForm.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const agents = await getCollection('agents');
+  return agents.map((agent) => ({
+    params: { slug: agent.slug },
+    props: { agent }
+  }));
+}
+
+// Get all agents for the page
+const agents = await getCollection('agents');
+
+// Map agents to simpler format for contact form
+const agentsForForm = agents.map(agent => ({
+  name: agent.data.name,
+  email: agent.data.email,
+  title: agent.data.jobTitle
+}));
+---
+
+<Layout
+  title="Our Expert Real Estate Agents - Houses Boutique"
+  description="Meet our team of experienced real estate agents specializing in luxury properties throughout Los Angeles"
+>
+  <!-- Hero Section -->
+  <section class="bg-primary py-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center text-white">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">
+          Meet Our Expert Agents
+        </h1>
+        <p class="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+          Our team of experienced real estate professionals is dedicated to helping you find your perfect property.
+          With deep knowledge of the Los Angeles market and a commitment to excellence, we deliver exceptional service.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-12 bg-neutral-50">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-primary-dark mb-2">{agents.length}+</div>
+          <div class="text-sm text-neutral-dark font-medium">Expert Agents</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-primary-dark mb-2">30+</div>
+          <div class="text-sm text-neutral-dark font-medium">Years Experience</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-primary-dark mb-2">$800M+</div>
+          <div class="text-sm text-neutral-dark font-medium">Properties Sold</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-primary-dark mb-2">500+</div>
+          <div class="text-sm text-neutral-dark font-medium">Happy Clients</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agents Grid Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-primary-dark mb-4">
+          Our Luxury Real Estate Team
+        </h2>
+        <p class="text-neutral max-w-2xl mx-auto">
+          Each agent brings unique expertise and specialization to serve your specific real estate needs
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" id="agents-grid">
+        {agents.map((agent) => (
+          <AgentCard
+            agent={agent.data}
+            onSelectAgent={agent.data.name}
+            selected={false}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form Section -->
+  <section class="py-16 bg-primary-faint">
+    <div class="container mx-auto px-4">
+      <AgentContactForm agents={agentsForForm} />
+    </div>
+  </section>
+
+  <!-- Why Choose Us Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-primary-dark mb-4">
+          Why Choose Houses Boutique?
+        </h2>
+        <p class="text-neutral max-w-2xl mx-auto">
+          We set the standard for luxury real estate service in Los Angeles
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-primary-dark mb-3">Expert Knowledge</h3>
+          <p class="text-neutral-dark">
+            Deep understanding of Los Angeles luxury real estate market trends and property values
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-primary-dark mb-3">Personalized Service</h3>
+          <p class="text-neutral-dark">
+            Tailored approach to match your specific needs and preferences for the perfect property
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-primary-dark mb-3">Proven Results</h3>
+          <p class="text-neutral-dark">
+            Track record of successful transactions and satisfied clients throughout Southern California
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  let selectedAgent = '';
+
+  // Function to select an agent
+  function selectAgent(agentName) {
+    selectedAgent = agentName;
+
+    // Update form dropdown
+    const agentSelect = document.getElementById('agent-select');
+    if (agentSelect) {
+      agentSelect.value = agentName;
+    }
+
+    // Update all cards to show selected state
+    const agentCards = document.querySelectorAll('#agents-grid > div');
+    agentCards.forEach((card, index) => {
+      const agentNameElement = card.querySelector('.text-white.text-xl.font-bold');
+      if (agentNameElement) {
+        const cardAgentName = agentNameElement.textContent;
+        const button = card.querySelector('button');
+        if (button) {
+          if (cardAgentName === agentName) {
+            button.textContent = 'Selected Agent';
+            button.classList.add('opacity-90');
+          } else {
+            button.textContent = 'Contact Agent';
+            button.classList.remove('opacity-90');
+          }
+        }
+      }
+    });
+
+    // Scroll to contact form
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  // Make the function globally available
+  window.selectAgent = selectAgent;
+
+  // Handle form submission
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('agent-contact-form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form data
+        const formData = new FormData(form);
+        const agent = formData.get('agent');
+        const firstName = formData.get('firstName');
+        const lastName = formData.get('lastName');
+        const email = formData.get('email');
+        const phone = formData.get('phone');
+        const messageType = formData.get('messageType');
+        const message = formData.get('message');
+        const contactMethod = formData.get('contactMethod');
+
+        // Here you would typically send the data to your backend
+        // For now, we'll just show a success message
+        alert(`Thank you ${firstName}! Your message has been sent to ${agent}. We'll contact you soon via ${contactMethod}.`);
+
+        // Reset form
+        form.reset();
+        selectedAgent = '';
+      });
+    }
+  });
+</script>

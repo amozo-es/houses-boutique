@@ -1,0 +1,258 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSecondary from '../components/HeroSecondary.astro';
+import { getCollection } from 'astro:content';
+
+// Get agents data for team section
+const agents = await getCollection('agents');
+---
+
+<Layout
+  title="About Us - Houses Boutique"
+  description="Learn about Houses Boutique, our mission, and the team of expert real estate professionals dedicated to finding your perfect property."
+>
+  <!-- Hero Section -->
+  <HeroSecondary
+    title="About Houses Boutique"
+    subtitle="Your trusted partner in finding exceptional properties in prime locations"
+    height="h-96"
+    alignment="left"
+    backgroundImage="https://images.unsplash.com/photo-1666790676906-0295230c121d?w=1920&h=600&fit=crop&crop=entropy&auto=format"
+    backgroundStyle="image"
+  />
+
+  <!-- Our Story Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-primary-dark mb-6">Our Story</h2>
+          <div class="space-y-4 text-neutral-dark leading-relaxed">
+            <p>
+              Founded with a vision to revolutionize the luxury real estate experience, Houses Boutique has been serving discerning clients for over a decade. We specialize in curating exceptional properties that meet the highest standards of quality, location, and investment potential.
+            </p>
+            <p>
+              Our journey began with a simple mission: to provide personalized, expert guidance to clients seeking not just a house, but a home that reflects their lifestyle and aspirations. Today, we're proud to be one of the most trusted names in luxury real estate.
+            </p>
+            <p>
+              We believe that every property has a story, and every client deserves a partner who understands their unique needs. Our team of experienced professionals combines market expertise with a deep commitment to client satisfaction.
+            </p>
+          </div>
+        </div>
+        <div class="relative">
+          <img
+            src="/images/about/story.jpg"
+            alt="Our Story"
+            class="rounded-lg elegant-shadow w-full"
+          />
+          <div class="absolute -bottom-6 -left-6 bg-primary text-white p-6 rounded-lg elegant-shadow-lg">
+            <div class="text-3xl font-bold mb-2">10+</div>
+            <div class="text-sm">Years of Excellence</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission & Values Section -->
+  <section class="py-16 bg-primary-faint">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-primary-dark mb-4">Our Mission & Values</h2>
+        <p class="text-neutral max-w-2xl mx-auto">
+          The principles that guide everything we do
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 elegant-shadow">
+            <svg class="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-primary-dark mb-3">Excellence</h3>
+          <p class="text-neutral">
+            We maintain the highest standards in property selection, service delivery, and client relationships.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 elegant-shadow">
+            <svg class="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-primary-dark mb-3">Transparency</h3>
+          <p class="text-neutral">
+            Open communication and honest guidance are fundamental to building lasting client relationships.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 elegant-shadow">
+            <svg class="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-primary-dark mb-3">Client Focus</h3>
+          <p class="text-neutral">
+            Your needs and goals are at the center of everything we do, ensuring personalized solutions.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 elegant-shadow">
+            <svg class="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-primary-dark mb-3">Innovation</h3>
+          <p class="text-neutral">
+            We embrace technology and creative approaches to deliver exceptional real estate experiences.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-primary-dark mb-4">Our Achievements</h2>
+        <p class="text-neutral max-w-2xl mx-auto">
+          Numbers that reflect our commitment to excellence
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-4xl font-bold text-primary mb-2">500+</div>
+          <div class="text-neutral-light">Properties Sold</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-primary mb-2">$250M+</div>
+          <div class="text-neutral-light">Total Sales</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-primary mb-2">98%</div>
+          <div class="text-neutral-light">Client Satisfaction</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-primary mb-2">15+</div>
+          <div class="text-neutral-light">Expert Agents</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="py-16 bg-primary-faint">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-primary-dark mb-4">Meet Our Team</h2>
+        <p class="text-neutral max-w-2xl mx-auto">
+          The dedicated professionals behind your real estate success
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {agents.map((agent) => (
+          <div class="bg-white rounded-lg overflow-hidden elegant-shadow hover:elegant-shadow-lg transition-shadow">
+            <img
+              src={agent.data.image}
+              alt={agent.data.name}
+              class="w-full h-64 object-cover"
+            />
+            <div class="p-6">
+              <h3 class="text-xl font-semibold text-primary-dark mb-1">{agent.data.name}</h3>
+              <p class="text-primary-pale mb-4">{agent.data.jobTitle}</p>
+
+              <p class="text-neutral-dark text-sm mb-4">{agent.data.bio}</p>
+
+              {agent.data.experience && (
+                <p class="text-neutral-light text-sm mb-4">
+                  <strong>Experience:</strong> {agent.data.experience}
+                </p>
+              )}
+
+              {agent.data.specialties && agent.data.specialties.length > 0 && (
+                <div class="mb-4">
+                  <p class="text-sm text-primary-pale font-medium mb-2">Specialties:</p>
+                  <div class="flex flex-wrap gap-2">
+                    {agent.data.specialties.map((specialty) => (
+                      <span class="px-2 py-1 bg-primary-faint text-primary-dark text-xs rounded-full">
+                        {specialty}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {agent.data.languages && agent.data.languages.length > 0 && (
+                <div class="mb-4">
+                  <p class="text-sm text-primary-pale font-medium mb-2">Languages:</p>
+                  <div class="flex flex-wrap gap-2">
+                    {agent.data.languages.map((language) => (
+                      <span class="text-sm text-neutral-dark">{language}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div class="border-t border-primary-faint pt-4 flex space-x-4">
+                <a
+                  href={`mailto:${agent.data.email}`}
+                  class="text-primary hover:text-primary-soft transition-colors"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                  </svg>
+                </a>
+                <a
+                  href={`tel:${agent.data.phone}`}
+                  class="text-primary hover:text-primary-soft transition-colors"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-16 bg-primary">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">
+        Ready to Find Your Dream Property?
+      </h2>
+      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
+        Let our expert team guide you through your real estate journey with personalized service and unmatched expertise.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/contact"
+          class="inline-flex items-center bg-white text-primary px-6 py-3 rounded-sm hover:bg-neutral-50 transition-colors font-medium"
+        >
+          Get Started
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+        <a
+          href="/properties"
+          class="inline-flex items-center border-2 border-white text-white px-6 py-3 rounded-sm hover:bg-white hover:text-primary transition-colors font-medium"
+        >
+          Browse Properties
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

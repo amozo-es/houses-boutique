@@ -1,0 +1,318 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PropertyHero from '../../components/PropertyHero.astro';
+import ContactAgent from '../../components/ContactAgent.astro';
+import ImageGallery from '../../components/ImageGallery.astro';
+import { Bed, Bath, Ruler, Car } from '@lucide/astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const properties = await getCollection('properties');
+  return properties.map((property) => ({
+    params: { slug: property.slug },
+    props: { property }
+  }));
+}
+
+interface Props {
+  property: CollectionEntry<'properties'>;
+}
+
+const { property } = Astro.props;
+
+// Get agent data from agents collection
+const agents = await getCollection('agents');
+const agentData = agents.find(agent => agent.data['agent-id'] === property.data['agent-id']);
+
+// Helper functions
+const formatPrice = (price: number, currency: string = 'USD') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+    maximumFractionDigits: 0
+  }).format(price);
+};
+
+const formatNumber = (num: number) => {
+  return new Intl.NumberFormat('en-US').format(num);
+};
+
+// Generate gallery images from property data or use defaults
+const hasImages = property.data.images && Array.isArray(property.data.images) && property.data.images.length > 0;
+const galleryImages = hasImages
+  ? property.data.images.map((img: string, index: number) => ({
+      src: img.replace('w=800&h=600', 'w=1200&h=800'),
+      thumb: img,
+      caption: index === 0 ? `${property.data.title} - Main View` : `${property.data.title} - Image ${index + 1}`,
+      alt: index === 0 ? `${property.data.title} - Main View` : `${property.data.title} - Image ${index + 1}`
+    }))
+  : [];
+
+// Get related properties (same zone, excluding current)
+const allProperties = await getCollection('properties');
+const relatedProperties = allProperties
+  .filter(p => p.data.zone === property.data.zone && p.slug !== property.slug)
+  .slice(0, 3);
+---
+
+<Layout
+  title={`${property.data.title} - Houses Boutique`}
+  description={property.data.description}
+  image={property.data.image}
+  meta={property.data.meta}
+>
+  <!-- Property Hero Section -->
+  <PropertyHero property={property} />
+
+  <!-- Image Gallery Section -->
+  {hasImages && (
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-primary-dark mb-4">
+            Property Gallery
+          </h2>
+          <p class="text-neutral max-w-2xl mx-auto">
+            Explore every aspect of this exceptional property with our comprehensive photo gallery
+          </p>
+        </div>
+
+        <ImageGallery images={galleryImages} id={`property-gallery-${property.slug}`} />
+      </div>
+    </section>
+  )}
+
+  <!-- Property Details Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-12">
+          <!-- Property Description -->
+          <div>
+            <h2 class="text-2xl font-bold text-primary-dark mb-6">Property Description</h2>
+            <div class="prose prose-lg max-w-none text-neutral-dark">
+              <p class="leading-relaxed">{property.data.description}</p>
+            </div>
+          </div>
+
+          <!-- Key Features Grid -->
+          <div>
+            <h3 class="text-xl font-semibold text-primary-dark mb-6">Property Features</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div class="text-center p-6 bg-primary-soft rounded-lg hover:elegant-shadow transition-shadow text-primary-lightest">
+                <div class="flex justify-center mb-3">
+                  <Bed class="w-8 h-8" />
+                </div>
+                <div class="text-2xl font-bold">{property.data.bedrooms}</div>
+                <div class="text-sm">Bedrooms</div>
+              </div>
+              <div class="text-center p-6 bg-primary-soft rounded-lg hover:elegant-shadow transition-shadow text-primary-lightest">
+                <div class="flex justify-center mb-3">
+                  <Bath class="w-8 h-8" />
+                </div>
+                <div class="text-2xl font-bold">{property.data.bathrooms}</div>
+                <div class="text-sm">Bathrooms</div>
+              </div>
+              <div class="text-center p-6 bg-primary-soft rounded-lg hover:elegant-shadow transition-shadow text-primary-lightest">
+                <div class="flex justify-center mb-3">
+                  <Ruler class="w-8 h-8" />
+                </div>
+                <div class="text-2xl font-bold">{formatNumber(property.data.size)}</div>
+                <div class="text-sm">{property.data.sizeUnit}</div>
+              </div>
+              {property.data.parking && (
+                <div class="text-center p-6 bg-primary-soft rounded-lg hover:elegant-shadow transition-shadow text-primary-lightest">
+                  <div class="flex justify-center mb-3">
+                    <Car class="w-8 h-8" />
+                  </div>
+                  <div class="text-2xl font-bold">{property.data.parking}</div>
+                  <div class="text-sm ">Parking</div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <!-- Amenities -->
+          {property.data.amenities && property.data.amenities.length > 0 && (
+            <div>
+              <h3 class="text-xl font-semibold text-primary-dark mb-6">Amenities</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {property.data.amenities.map((amenity) => (
+                  <div class="flex items-center space-x-3">
+                    <div class="w-2 h-2 bg-primary rounded-full"></div>
+                    <span class="text-neutral-dark">{amenity}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Facilities -->
+          {property.data.facilities && property.data.facilities.length > 0 && (
+            <div>
+              <h3 class="text-xl font-semibold text-primary-dark mb-6">Facilities</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {property.data.facilities.map((facility) => (
+                  <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5 text-primary-pale" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-neutral-dark">{facility}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Additional Details -->
+          <div>
+            <h3 class="text-xl font-semibold text-primary-dark mb-6">Additional Details</h3>
+            <div class="bg-primary-soft p-6 rounded-lg space-y-4 text-primary-lightest">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <span class="text-sm font-medium">Property Type:</span>
+                  <span class="ml-2">Residential</span>
+                </div>
+                <div>
+                  <span class="text-sm font-medium">Status:</span>
+                  <span class="ml-2 capitalize">{property.data.status}</span>
+                </div>
+                {property.data.yearBuilt && (
+                  <div>
+                    <span class="text-sm font-medium">Year Built:</span>
+                    <span class="ml-2">{property.data.yearBuilt}</span>
+                  </div>
+                )}
+                <div>
+                  <span class="text-sm font-medium">Zone:</span>
+                  <span class="ml-2">{property.data.zone}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Location Details -->
+          <div>
+            <h3 class="text-xl font-semibold text-primary-dark mb-6">Location</h3>
+            <div class="bg-primary-soft p-6 rounded-lg text-primary-lightest">
+              <div class="flex items-start space-x-3">
+                <svg class="w-6 h-6 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                </svg>
+                <div>
+                  <p class="font-medium">{property.data.location.address}</p>
+                  <p class="text-sm mt-1">
+                    Located in the prestigious {property.data.zone} neighborhood
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Related Properties -->
+          {relatedProperties.length > 0 && (
+            <div>
+              <h3 class="text-xl font-semibold text-primary-dark mb-6">Related Properties</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {relatedProperties.map((relatedProperty) => (
+                  <div class="bg-white border border-primary-faint rounded-lg overflow-hidden hover:elegant-shadow transition-shadow">
+                    <img
+                      src={relatedProperty.data.image}
+                      alt={relatedProperty.data.title}
+                      class="w-full h-48 object-cover"
+                    />
+                    <div class="p-4">
+                      <h4 class="font-semibold text-primary-dark mb-2">{relatedProperty.data.title}</h4>
+                      <p class="text-primary font-bold mb-2">
+                        {formatPrice(relatedProperty.data.price, relatedProperty.data.currency)}
+                      </p>
+                      <a
+                        href={`/properties/${relatedProperty.slug}`}
+                        class="text-primary hover:text-primary-soft transition-colors text-sm font-medium"
+                      >
+                        View Property →
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+          <!-- Contact Agent Widget -->
+          <ContactAgent
+            agent={agentData?.data}
+            propertySlug={property.slug}
+            compact={true}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-16 bg-primary">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">
+        Interested in This Property?
+      </h2>
+      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
+        Schedule a viewing or get more information about this exceptional property. Our agents are ready to help you.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="tel:+15551234567"
+          class="inline-flex items-center bg-white text-primary px-6 py-3 rounded-sm hover:bg-neutral-50 transition-colors font-medium"
+        >
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+          </svg>
+          Call Us Now
+        </a>
+        <a
+          href="#contact-form"
+          class="inline-flex items-center border-2 border-white text-white px-6 py-3 rounded-sm hover:bg-white hover:text-primary transition-colors font-medium"
+        >
+          Send Message
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .prose {
+    line-height: 1.7;
+  }
+
+  .prose p {
+    margin-bottom: 1.5rem;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+
+<script is:inline>
+  // Smooth scroll to contact form
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }
+    });
+  });
+</script>

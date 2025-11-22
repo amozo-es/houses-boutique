@@ -1,0 +1,198 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import { getCollection } from 'astro:content';
+
+// Get featured properties and zones
+const featuredProperties = await getCollection('properties', (entry) => entry.data.featured);
+const allProperties = await getCollection('properties');
+const zones = await getCollection('zones');
+
+// Limit featured properties to 3 for homepage
+const homeFeaturedProperties = featuredProperties.slice(0, 3);
+
+// Get unique zones from properties
+const availableZones = [...new Set(allProperties.map(p => p.data.zone))];
+---
+
+<Layout
+  title="Houses Boutique - Exclusive Properties in Prime Locations"
+  description="Discover our curated selection of luxury properties in the most sought-after locations. Your dream home awaits."
+>
+  <!-- Hero Section -->
+  <Hero
+    title="Exclusive Properties in Prime Locations"
+    subtitle="Discover our curated selection of luxury homes and investment opportunities in the most desirable neighborhoods."
+    image="https://images.unsplash.com/photo-1596178067639-5c6e68aea6dc"
+    height="full"
+    alignment="center"
+    ctaText="View Featured Properties"
+    ctaLink="#featured"
+  />
+
+  <!-- Featured Properties Section -->
+  <section id="featured" class="py-16 bg-primary-faint">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-primary-dark mb-4">
+          Featured Properties
+        </h2>
+        <p class="text-lg text-neutral max-w-2xl mx-auto">
+          Handpicked selection of exceptional properties that represent the best in luxury living and investment potential.
+        </p>
+      </div>
+
+      {homeFeaturedProperties.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {homeFeaturedProperties.map((property) => (
+            <PropertyCard property={property} />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <p class="text-neutral-light">No featured properties available at the moment.</p>
+        </div>
+      )}
+
+      <div class="text-center mt-8">
+        <a
+          href="/properties"
+          class="inline-flex items-center bg-primary-soft text-primary-lightest px-6 py-3 rounded-sm hover:bg-primary transition-colors font-medium"
+        >
+          View All Properties
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Premium Zones Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-primary-dark mb-4">
+          Premium Zones
+        </h2>
+        <p class="text-lg text-neutral max-w-2xl mx-auto">
+          Explore our carefully selected neighborhoods, each offering unique lifestyle advantages and investment potential.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {zones.map((zone) => (
+          <div class="group cursor-pointer">
+            <div class="relative overflow-hidden rounded-lg elegant-shadow hover:elegant-shadow-lg transition-all duration-300">
+              <img
+                src={zone.data.image}
+                alt={zone.data.title}
+                class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <h3 class="text-xl font-semibold mb-2">{zone.data.title}</h3>
+                <p class="text-white/90 text-sm line-clamp-2">{zone.data.description}</p>
+              </div>
+            </div>
+            <a
+              href={`/zones/${zone.slug}`}
+              class="block mt-4 text-center text-primary hover:text-primary-soft transition-colors font-medium"
+            >
+              Explore {zone.data.title} →
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <div class="text-center mt-12">
+        <a
+          href="/zones"
+          class="inline-flex items-center border-2 border-primary text-primary px-6 py-3 rounded-sm hover:bg-primary hover:text-white transition-colors font-medium"
+        >
+          View All Zones
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value Proposition Section -->
+  <section class="py-16 bg-neutral-dark text-white">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary-pale rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+              <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H6a2 2 0 100 4h2a2 2 0 100 4h2a1 1 0 100 2 2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-3">Expert Curation</h3>
+          <p class="text-neutral-light">
+            Every property is carefully selected by our team of real estate experts to ensure exceptional quality and value.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary-pale rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-3">Premium Quality</h3>
+          <p class="text-neutral-light">
+            We represent only the finest properties that meet our strict standards for location, design, and investment potential.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary-pale rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-3">Personalized Service</h3>
+          <p class="text-neutral-light">
+            Our dedicated agents provide personalized guidance throughout your entire real estate journey, from search to closing.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-16 bg-primary">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+        Find Your Dream Property Today
+      </h2>
+      <p class="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
+        Let our expert team help you discover the perfect property that matches your lifestyle and investment goals.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/contact"
+          class="inline-flex items-center bg-primary-soft text-primary-lightest px-6 py-3 rounded-sm hover:bg-primary transition-colors font-medium"
+        >
+          Schedule Consultation
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </a>
+        <a
+          href="/properties"
+          class="inline-flex items-center border-2 border-white text-white px-6 py-3 rounded-sm hover:bg-white hover:text-primary transition-colors font-medium"
+        >
+          Browse Properties
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
