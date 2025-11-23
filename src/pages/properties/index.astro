@@ -58,7 +58,7 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
       <div class="bg-primary-soft p-6 rounded-lg mb-6 text-primary-lightest">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-xl font-semibold">Filter Properties</h2>
-          <button id="clear-filters" class="bg-white text-primary px-4 py-2 rounded-sm border border-primary hover:bg-primary hover:text-white transition-colors text-sm font-medium">
+          <button id="clear-filters" class="bg-primary-faint text-primary px-4 py-2 rounded-sm border border-primary hover:bg-white hover:text-primary transition-colors text-sm font-medium cursor-pointer">
             Clear All Filters
           </button>
         </div>
@@ -66,7 +66,7 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           <!-- Zone Filter -->
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-2">Zone</label>
+            <label class="block text-sm font-medium mb-2">Zone</label>
             <select id="zone-filter" class="filter-select">
               <option value="">All Zones</option>
               {uniqueZones.map(zone => (
@@ -77,7 +77,7 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
 
           <!-- Price Range -->
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-2">Min Price</label>
+            <label class="block text-sm font-medium mb-2">Min Price</label>
             <select id="min-price-filter" class="filter-select">
               <option value="">No Min</option>
               <option value="500000">$500,000</option>
@@ -88,7 +88,7 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-2">Max Price</label>
+            <label class="block text-sm font-medium mb-2">Max Price</label>
             <select id="max-price-filter" class="filter-select">
               <option value="">No Max</option>
               <option value="1000000">$1,000,000</option>
@@ -100,23 +100,30 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
 
           <!-- Bedrooms -->
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-2">Bedrooms</label>
+            <label class="block text-sm font-medium mb-2">Bedrooms</label>
             <select id="bedrooms-filter" class="filter-select">
               <option value="">Any</option>
-              {Array.from({length: maxBedrooms}, (_, i) => i + 1).map(num => (
-                <option value={num}>{num}+ {num === 1 ? 'Bedroom' : 'Bedrooms'}</option>
-              ))}
+              <option value="1">1+ Bedroom</option>
+              <option value="2">2+ Bedrooms</option>
+              <option value="3">3+ Bedrooms</option>
+              <option value="4">4+ Bedrooms</option>
+              <option value="5">5+ Bedrooms</option>
+              <option value="6">6+ Bedrooms</option>
+              <option value="7">7+ Bedrooms</option>
+              <option value="8">8+ Bedrooms</option>
             </select>
           </div>
 
           <!-- Bathrooms -->
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-2">Bathrooms</label>
+            <label class="block text-sm font-medium mb-2">Bathrooms</label>
             <select id="bathrooms-filter" class="filter-select">
               <option value="">Any</option>
-              {Array.from({length: maxBathrooms}, (_, i) => i + 1).map(num => (
-                <option value={num}>{num}+ {num === 1 ? 'Bathroom' : 'Bathrooms'}</option>
-              ))}
+              <option value="1">1+ Bathroom</option>
+              <option value="2">2+ Bathrooms</option>
+              <option value="3">3+ Bathrooms</option>
+              <option value="4">4+ Bathrooms</option>
+              <option value="5">5+ Bathrooms</option>
             </select>
           </div>
         </div>
@@ -128,9 +135,9 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
           <span id="results-count" class="font-medium">Showing {allProperties.length} Properties</span>
         </div>
 
-        <div class="flex items-center space-x-4">
-          <label class="text-sm font-medium text-neutral-dark">Sort by:</label>
-          <select id="sort-select" class="filter-select">
+        <div class="flex items-center space-x-3">
+          <span class="text-sm font-medium text-neutral-dark whitespace-nowrap">Sort by:</span>
+          <select id="sort-select" class="filter-select min-w-40">
             <option value="featured">Featured</option>
             <option value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
@@ -330,15 +337,28 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
   }
 </style>
 
-<script>
-  // Filter and Sort functionality
-  let allProperties = JSON.parse(`{{JSON.stringify(allProperties.map(p => ({
+<script define:vars={{ allProperties: allProperties.map(p => ({
     ...p.data,
     slug: p.slug,
     price: p.data.price
-  })))}}`);
+  })) }}>
+  // Filter and Sort functionality
+  let allPropertiesData = allProperties;
 
-  let filteredProperties = [...allProperties];
+  // Debug: log the structure of the data
+  console.log('All properties data structure:', allPropertiesData.map(p => ({
+    slug: p.slug,
+    title: p.title,
+    hasData: !!p.data,
+    price: p.data?.price,
+    bedrooms: p.data?.bedrooms,
+    bathrooms: p.data?.bathrooms,
+    size: p.data?.size,
+    featured: p.data?.featured,
+    createdAt: p.data?.createdAt
+  })));
+
+  let filteredProperties = [...allPropertiesData];
   let currentPage = 1;
   const propertiesPerPage = 9;
 
@@ -387,27 +407,80 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
   function applySorting() {
     const sortBy = sortSelect.value;
 
+    // Debug: log current filtered properties
+    console.log('Properties before sorting:', filteredProperties.map(p => ({
+      title: p.title,
+      price: p.price,
+      bedrooms: p.bedrooms,
+      bathrooms: p.bathrooms,
+      size: p.size,
+      featured: p.featured,
+      createdAt: p.createdAt
+    })));
+
     switch(sortBy) {
       case 'price-low':
-        filteredProperties.sort((a, b) => a.price - b.price);
+        filteredProperties.sort((a, b) => {
+          const priceA = a.price || 0;
+          const priceB = b.price || 0;
+          return priceA - priceB;
+        });
         break;
       case 'price-high':
-        filteredProperties.sort((a, b) => b.price - a.price);
+        filteredProperties.sort((a, b) => {
+          const priceA = a.price || 0;
+          const priceB = b.price || 0;
+          return priceB - priceA;
+        });
         break;
       case 'bedrooms':
-        filteredProperties.sort((a, b) => b.bedrooms - a.bedrooms);
+        filteredProperties.sort((a, b) => {
+          const bedsA = a.bedrooms || 0;
+          const bedsB = b.bedrooms || 0;
+          return bedsB - bedsA;
+        });
         break;
       case 'size':
-        filteredProperties.sort((a, b) => b.size - a.size);
+        filteredProperties.sort((a, b) => {
+          // Handle size: can be number or string
+          const sizeA = typeof a.size === 'number' ? a.size : parseFloat(a.size) || 0;
+          const sizeB = typeof b.size === 'number' ? b.size : parseFloat(b.size) || 0;
+          return sizeB - sizeA;
+        });
         break;
       case 'newest':
-        filteredProperties.sort((a, b) => new Date(b.date || '2023-01-01') - new Date(a.date || '2023-01-01'));
+        filteredProperties.sort((a, b) => {
+          const dateA = new Date(a.createdAt || a.updatedAt || '2023-01-01');
+          const dateB = new Date(b.createdAt || b.updatedAt || '2023-01-01');
+          return dateB - dateA;
+        });
         break;
       case 'featured':
       default:
-        filteredProperties.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+        // Featured properties first, then by creation date
+        filteredProperties.sort((a, b) => {
+          const featuredA = a.featured ? 1 : 0;
+          const featuredB = b.featured ? 1 : 0;
+          if (featuredB !== featuredA) {
+            return featuredB - featuredA;
+          }
+          // If both are featured or both are not featured, sort by creation date
+          const dateA = new Date(a.createdAt || a.updatedAt || '2023-01-01');
+          const dateB = new Date(b.createdAt || b.updatedAt || '2023-01-01');
+          return dateB - dateA;
+        });
         break;
     }
+
+    // Debug: log sorted properties
+    console.log(`Sorted by ${sortBy}:`, filteredProperties.map(p => ({
+      title: p.title,
+      price: p.price,
+      bedrooms: p.bedrooms,
+      bathrooms: p.bathrooms,
+      size: p.size,
+      featured: p.featured
+    })));
   }
 
   function renderProperties() {
@@ -417,26 +490,67 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
     }
 
     if (filteredProperties.length === 0) {
-      if (propertiesGrid) {
-        propertiesGrid.innerHTML = `
-          <div class="col-span-full text-center py-12">
-            <svg class="w-16 h-16 text-primary-pale mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
-            </svg>
-            <h3 class="text-xl font-semibold text-primary-dark mb-2">No Properties Found</h3>
-            <p class="text-neutral-light mb-6">Try adjusting your filters or search criteria</p>
-            <button class="bg-primary text-white px-6 py-3 rounded-sm hover:bg-primary-soft transition-colors font-medium" onclick="clearAllFilters()">
-              Clear Filters
-            </button>
-          </div>
+      // Get all property cards and hide them
+      const propertyCards = propertiesGrid.querySelectorAll('[data-property-slug]');
+      const noResultsMessage = propertiesGrid.querySelector('.no-results-message');
+
+      // Hide all property cards
+      propertyCards.forEach(card => {
+        card.classList.add('hidden');
+      });
+
+      // Show no results message if it doesn't exist
+      if (!noResultsMessage) {
+        const noResultsDiv = document.createElement('div');
+        noResultsDiv.className = 'col-span-full text-center py-12 no-results-message';
+        noResultsDiv.innerHTML = `
+          <svg class="w-16 h-16 text-primary-pale mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+          </svg>
+          <h3 class="text-xl font-semibold text-primary-dark mb-2">No Properties Found</h3>
+          <p class="text-neutral-light mb-6">Try adjusting your filters or search criteria</p>
+          <button class="bg-primary text-white px-6 py-3 rounded-sm hover:bg-primary-soft transition-colors font-medium" onclick="clearAllFilters()">
+            Clear Filters
+          </button>
         `;
+        propertiesGrid.appendChild(noResultsDiv);
       }
       return;
     }
 
-    // For this demo, we'll just reload the page to show filtered results
-    // In a real app, you'd render the properties dynamically
-    console.log('Filtered properties:', filteredProperties.length);
+    // Remove no results message if it exists
+    const noResultsMsg = propertiesGrid.querySelector('.no-results-message');
+    if (noResultsMsg) {
+      noResultsMsg.remove();
+    }
+
+    // Get slugs of filtered properties in order
+    const filteredSlugs = filteredProperties.map(p => p.slug);
+    console.log('Attempting to reorder cards. Filtered slugs:', filteredSlugs);
+
+    // Get all property cards before removing them
+    const allPropertyCards = Array.from(propertiesGrid.querySelectorAll('[data-property-slug]'));
+
+    // Remove all property cards temporarily
+    allPropertyCards.forEach(card => {
+      if (card.parentNode) {
+        card.parentNode.removeChild(card);
+      }
+    });
+
+    // Add cards back in the correct order
+    filteredSlugs.forEach((slug, index) => {
+      const card = allPropertyCards.find(c => c.getAttribute('data-property-slug') === slug);
+      if (card) {
+        card.classList.remove('hidden');
+        propertiesGrid.appendChild(card);
+        console.log(`Added card ${index}: ${slug}`);
+      } else {
+        console.error(`Card not found for slug: ${slug}`);
+      }
+    });
+
+    console.log('Final order in DOM:', Array.from(propertiesGrid.querySelectorAll('[data-property-slug]')).map(c => c.getAttribute('data-property-slug')));
   }
 
   function clearAllFilters() {
@@ -451,19 +565,34 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
     sortSelect.value = 'featured';
 
     // Reset filtered properties to all properties
-    filteredProperties = [...allProperties];
+    filteredProperties = [...allPropertiesData];
 
     // Update UI
     if (resultsCount) {
-      resultsCount.textContent = `Showing ${allProperties.length} Properties`;
+      resultsCount.textContent = `Showing ${allPropertiesData.length} Properties`;
     }
 
-    // Restore original properties grid
-    location.reload(); // Simple solution for demo
+    // Restore original properties grid by showing all cards
+    const propertyCards = propertiesGrid.querySelectorAll('[data-property-slug]');
+    const noResultsMessage = propertiesGrid.querySelector('.no-results-message');
+
+    propertyCards.forEach(card => {
+      card.classList.remove('hidden');
+    });
+
+    if (noResultsMessage) {
+      noResultsMessage.remove();
+    }
+
+    renderProperties();
   }
 
   // Wait for DOM to be ready
   document.addEventListener('DOMContentLoaded', function() {
+    // Apply initial sorting (featured by default)
+    applySorting();
+    renderProperties();
+
     // Event listeners for filters
     [zoneFilter, minPriceFilter, maxPriceFilter, bedroomsFilter, bathroomsFilter, sortSelect].forEach(element => {
       if (element) {
