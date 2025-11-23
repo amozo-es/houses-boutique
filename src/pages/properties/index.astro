@@ -335,6 +335,11 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
   .filter-select::-webkit-scrollbar-thumb:hover {
     background: #7a8c5e;
   }
+
+  /* Ensure hidden property cards don't affect grid layout */
+  [data-property-slug].hidden {
+    display: none !important;
+  }
 </style>
 
 <script define:vars={{ allProperties: allProperties.map(p => ({
@@ -489,17 +494,17 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
       resultsCount.textContent = `Showing ${filteredProperties.length} Properties`;
     }
 
-    if (filteredProperties.length === 0) {
-      // Get all property cards and hide them
-      const propertyCards = propertiesGrid.querySelectorAll('[data-property-slug]');
-      const noResultsMessage = propertiesGrid.querySelector('.no-results-message');
+    // Get all property cards
+    const allPropertyCards = Array.from(propertiesGrid.querySelectorAll('[data-property-slug]'));
 
+    if (filteredProperties.length === 0) {
       // Hide all property cards
-      propertyCards.forEach(card => {
+      allPropertyCards.forEach(card => {
         card.classList.add('hidden');
       });
 
       // Show no results message if it doesn't exist
+      let noResultsMessage = propertiesGrid.querySelector('.no-results-message');
       if (!noResultsMessage) {
         const noResultsDiv = document.createElement('div');
         noResultsDiv.className = 'col-span-full text-center py-12 no-results-message';
@@ -528,29 +533,25 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
     const filteredSlugs = filteredProperties.map(p => p.slug);
     console.log('Attempting to reorder cards. Filtered slugs:', filteredSlugs);
 
-    // Get all property cards before removing them
-    const allPropertyCards = Array.from(propertiesGrid.querySelectorAll('[data-property-slug]'));
-
-    // Remove all property cards temporarily
+    // Hide all property cards first
     allPropertyCards.forEach(card => {
-      if (card.parentNode) {
-        card.parentNode.removeChild(card);
-      }
+      card.classList.add('hidden');
     });
 
-    // Add cards back in the correct order
+    // Show only the filtered properties in the correct order
     filteredSlugs.forEach((slug, index) => {
       const card = allPropertyCards.find(c => c.getAttribute('data-property-slug') === slug);
       if (card) {
         card.classList.remove('hidden');
+        // Move card to the end of the grid to maintain order
         propertiesGrid.appendChild(card);
-        console.log(`Added card ${index}: ${slug}`);
+        console.log(`Showing card ${index}: ${slug}`);
       } else {
         console.error(`Card not found for slug: ${slug}`);
       }
     });
 
-    console.log('Final order in DOM:', Array.from(propertiesGrid.querySelectorAll('[data-property-slug]')).map(c => c.getAttribute('data-property-slug')));
+    console.log('Final order in DOM:', Array.from(propertiesGrid.querySelectorAll('[data-property-slug]:not(.hidden)')).map(c => c.getAttribute('data-property-slug')));
   }
 
   function clearAllFilters() {
@@ -567,23 +568,8 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
     // Reset filtered properties to all properties
     filteredProperties = [...allPropertiesData];
 
-    // Update UI
-    if (resultsCount) {
-      resultsCount.textContent = `Showing ${allPropertiesData.length} Properties`;
-    }
-
-    // Restore original properties grid by showing all cards
-    const propertyCards = propertiesGrid.querySelectorAll('[data-property-slug]');
-    const noResultsMessage = propertiesGrid.querySelector('.no-results-message');
-
-    propertyCards.forEach(card => {
-      card.classList.remove('hidden');
-    });
-
-    if (noResultsMessage) {
-      noResultsMessage.remove();
-    }
-
+    // Apply default sorting (featured) and render
+    applySorting();
     renderProperties();
   }
 
