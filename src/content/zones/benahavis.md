@@ -2,7 +2,8 @@
 title: "Benahavís"
 description: "Exclusive mountain retreat featuring world-class golf, luxury villas, and spectacular views of the Costa del Sol."
 overview: "Benahavís represents the pinnacle of mountain luxury living on the Costa del Sol, offering an exclusive retreat combining championship golf courses, stunning natural beauty, and sophisticated Mediterranean lifestyle. This prestigious area is home to some of Southern Spain's most exclusive properties, from elegant golf course villas to mountaintop estates with panoramic views across to Africa."
-image: "https://images.unsplash.com/photo-1600047509807-b5bf14b08d16?w=1200&h=800&fit=crop&crop=entropy&auto=format&query=benahavis%20mountain%20luxury"
+image: "https://images.unsplash.com/photo-1722452848310-cc5607a3851c?w=1200&h=800&fit=crop&crop=entropy&auto=format&query=benahavis%20mountain%20luxury"
+thumbnail: "https://images.unsplash.com/photo-1722452848310-cc5607a3851c?w=400&h=260&fit=crop&crop=entropy&auto=format&query=benahavis%20mountain%20luxury"
 meta:
   title: "Benahavís Luxury Properties | Golf Villas & Mountain Homes | Houses Boutique"
   description: "Discover exclusive luxury properties for sale in Benahavís, Costa del Sol. Premium golf villas, mountain estates, and luxury homes with spectacular Mediterranean views. Contact our expert agents today."

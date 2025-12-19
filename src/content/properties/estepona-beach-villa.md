@@ -11,7 +11,7 @@ bedrooms: 4
 bathrooms: 5
 size: 320
 sizeUnit: "m²"
-description: "Stunning contemporary beachfront property offering direct beach access and spectacular ocean views. This architectural masterpiece features floor-to-ceiling glass walls, open-concept living spaces, a chef's kitchen with ocean views, luxurious master suite with private balcony, infinity edge pool overlooking the Pacific, and direct beach access. The perfect retreat for those seeking the ultimate coastal lifestyle."
+description: "Stunning contemporary beachfront property offering direct beach access and spectacular ocean views. This architectural masterpiece features floor-to-ceiling glass walls, open-concept living spaces, a chef's kitchen with ocean views, luxurious master suite with private balcony, infinity edge pool overlooking the Mediterranean, and direct beach access. The perfect retreat for those seeking the ultimate coastal lifestyle."
 featured: true
 status: "available"
 image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&h=600&fit=crop&crop=entropy&auto=format&query=estepona%20beach%20luxury%20villa"
@@ -25,10 +25,10 @@ images:
   - "https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=800&h=600&fit=crop&crop=entropy&auto=format"
   - "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop&crop=entropy&auto=format"
 location:
-  address: "2345 Pacific Coast Highway, Malibu"
+  address: "Estepona Beach, Estepona, Málaga"
   coordinates:
-    lat: 34.0259
-    lng: -118.7798
+    lat: 36.4250
+    lng: -5.1450
 amenities:
   - "Direct beach access"
   - "Ocean-view infinity pool"
@@ -50,6 +50,6 @@ createdAt: 2024-01-08
 updatedAt: 2024-01-22
 ---
 
-# Contemporary Malibu Beach House
+# Contemporary Estepona Beach House
 
-Experience the ultimate in coastal luxury with this magnificent beachfront property, where modern design meets the natural beauty of the Pacific coastline. Wake up to panoramic ocean views and enjoy direct access to pristine sandy beaches.
+Experience the ultimate in coastal luxury with this magnificent beachfront property, where modern design meets the natural beauty of the Mediterranean coastline. Wake up to panoramic ocean views and enjoy direct access to pristine sandy beaches.

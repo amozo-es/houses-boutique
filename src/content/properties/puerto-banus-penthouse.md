@@ -26,10 +26,10 @@ images:
   - "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&h=600&fit=crop&crop=entropy&auto=format"
   - "https://images.unsplash.com/photo-1634207521511-2fd73cdaa83d?w=800&h=600&fit=crop&crop=entropy&auto=format"
 location:
-  address: "1234 Summit Drive, Bel Air"
+  address: "Puerto Banús, Marbella"
   coordinates:
-    lat: 34.0834
-    lng: -118.4470
+    lat: 36.4889
+    lng: -4.9733
 amenities:
   - "Infinity pool with city views"
   - "Smart home technology"
@@ -66,4 +66,4 @@ The infinity pool appears to merge with the horizon, creating a stunning visual 
 
 ## Prime Location
 
-Located in the exclusive Bel Air neighborhood, this property offers privacy and tranquility while remaining just minutes from world-class dining, shopping, and entertainment options.
+Located in Puerto Banús, this property offers privacy and upscale amenities while remaining just minutes from world-class dining, shopping, and entertainment options.

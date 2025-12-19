@@ -2,7 +2,8 @@
 title: "Marbella"
 description: "Glamorous Costa del Sol destination, featuring Golden Mile shopping, luxury marina, and world-class beachfront living."
 overview: "Marbella is synonymous with Mediterranean luxury and sophistication, offering an unparalleled lifestyle with its famous Golden Mile, world-class marina, and some of the most prestigious real estate on the Costa del Sol. This iconic city combines glamour with the serenity of beautiful beaches and exclusive residential areas, making it the crown jewel of Southern Spain."
-image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1200&h=800&fit=crop&crop=entropy&auto=format&query=marbella%20luxury"
+image: "https://images.unsplash.com/photo-1722452848316-c6c26ebeeb09?w=1200&h=800&fit=crop&crop=entropy&auto=format&query=marbella%20luxury"
+thumbnail: "https://images.unsplash.com/photo-1722452848316-c6c26ebeeb09?w=400&h=260&fit=crop&crop=entropy&auto=format&query=marbella%20luxury"
 meta:
   title: "Marbella Luxury Properties | Golden Mile Real Estate & Beachfront Homes | Houses Boutique"
   description: "Discover exclusive luxury properties for sale in Marbella, Costa del Sol. Premium Golden Mile real estate, beachfront penthouses, luxury villas, and upscale homes in Spain's most prestigious location. Contact our luxury real estate experts."

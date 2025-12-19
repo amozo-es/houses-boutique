@@ -2,7 +2,8 @@
 title: "Estepona"
 description: "Exclusive coastal paradise on Costa del Sol, offering pristine beaches, world-class golf, and luxurious Mediterranean living."
 overview: "Estepona represents the perfect blend of traditional Andalusian charm and modern luxury on the Costa del Sol. This exclusive coastal town offers some of the most prestigious real estate in Southern Spain, from stunning beachfront villas to luxury golf course properties, all with breathtaking Mediterranean views and access to world-class amenities."
-image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&h=800&fit=crop&crop=entropy&auto=format&query=marbella%20coast"
+image: "https://images.unsplash.com/photo-1580405709510-06f65ab3a16d?w=1200&h=800&fit=crop&crop=entropy&auto=format&query=marbella%20coast"
+thumbnail: "https://images.unsplash.com/photo-1580405709510-06f65ab3a16d?w=400&h=260&fit=crop&crop=entropy&auto=format&query=marbella%20luxury"
 meta:
   title: "Estepona Luxury Properties | Beachfront Villas & Coastal Real Estate | Houses Boutique"
   description: "Discover exclusive luxury properties for sale in Estepona, Costa del Sol. Premium beachfront villas, coastal homes, and luxury properties with Mediterranean sea views. Contact our real estate specialists today."

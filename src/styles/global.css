@@ -76,6 +76,20 @@
     background-color: var(--color-primary-300);
   }
 
+  /* Hover variants for semantic classes (custom utilities) */
+  .hover\:text-primary:hover { color: var(--color-primary-700); }
+  .hover\:text-primary-soft:hover { color: var(--color-primary-600); }
+  .hover\:text-primary-light:hover { color: var(--color-primary-500); }
+  .hover\:text-primary-pale:hover { color: var(--color-primary-400); }
+  .hover\:text-primary-lightest:hover { color: var(--color-neutral-100); }
+  .hover\:text-primary-faint:hover { color: var(--color-primary-300); }
+
+  .hover\:bg-primary:hover { background-color: var(--color-primary-700); }
+  .hover\:bg-primary-soft:hover { background-color: var(--color-primary-600); }
+  .hover\:bg-primary-pale:hover { background-color: var(--color-primary-400); }
+
+  .hover\:border-primary:hover { border-color: var(--color-primary-700); }
+
   .text-neutral-dark {
     color: var(--color-neutral-800);
   }

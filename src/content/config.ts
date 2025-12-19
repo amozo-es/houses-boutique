@@ -38,6 +38,7 @@ const zonesSchema = z.object({
   description: z.string(),
   overview: z.string(),
   image: z.string(),
+  thumbnail: z.string().optional(),
   mapEmbedUrl: z.string().optional(),
   coordinates: z.object({
     center: z.object({

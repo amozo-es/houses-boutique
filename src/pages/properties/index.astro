@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import PropertyCard from '../../components/PropertyCard.astro';
 import { getCollection } from 'astro:content';
+import CallToAction from '../../components/CallToAction.astro';
 
 // Get all properties and zones
 const allProperties = await getCollection('properties');
@@ -204,33 +205,10 @@ const paginatedProperties = allProperties.slice(startIndex, endIndex);
   )}
 
   <!-- CTA Section -->
-  <section class="py-16 bg-primary">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold text-white mb-4">
-        Can't Find What You're Looking For?
-      </h2>
-      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
-        Let our expert team help you find the perfect property. We have access to exclusive listings not shown here.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="/contact"
-          class="inline-flex items-center bg-white text-primary px-6 py-3 rounded-sm hover:bg-neutral-50 transition-colors font-medium"
-        >
-          Contact Our Team
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-        </a>
-        <a
-          href="/zones"
-          class="inline-flex items-center border-2 border-white text-white px-6 py-3 rounded-sm hover:bg-white hover:text-primary transition-colors font-medium"
-        >
-          Explore Zones
-        </a>
-      </div>
-    </div>
-  </section>
+  <CallToAction
+    title="Can't Find What You're Looking For?"
+    subtitle="Let our expert team help you find the perfect property. We have access to exclusive listings not shown here."
+  />
 </Layout>
 
 <style>

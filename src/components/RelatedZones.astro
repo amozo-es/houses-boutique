@@ -1,0 +1,49 @@
+---
+interface Props {
+  zones: Array<any>;
+}
+const { zones } = Astro.props as Props;
+---
+
+<section class="py-16 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-primary-dark mb-4">Explore Other Premium Zones</h2>
+      <p class="text-neutral max-w-2xl mx-auto">Discover other exclusive neighborhoods with exceptional properties</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {zones.map((relatedZone) => (
+        <div class="group">
+          <a
+            href={`/zones/${relatedZone.slug}`}
+            class="block cursor-pointer"
+            title={`Explore ${relatedZone.data.title}`}
+            aria-label={`Explore ${relatedZone.data.title}`}
+          >
+            <div class="relative overflow-hidden rounded-lg elegant-shadow hover:elegant-shadow-lg transition-all duration-300">
+              <img
+                src={relatedZone.data.thumbnail}
+                alt={relatedZone.data.title}
+                loading="lazy"
+                class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <h3 class="text-xl font-semibold mb-2">{relatedZone.data.title}</h3>
+                <p class="text-white/90 text-sm line-clamp-2">{relatedZone.data.description}</p>
+              </div>
+            </div>
+          </a>
+          <a
+            href={`/zones/${relatedZone.slug}`}
+            class="block mt-4 text-center text-primary hover:text-primary-soft transition-colors font-medium"
+            aria-label={`Explore ${relatedZone.data.title}`}
+          >
+            Explore {relatedZone.data.title} →
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

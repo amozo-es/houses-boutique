@@ -5,6 +5,7 @@ import ContactAgent from '../../components/ContactAgent.astro';
 import ImageGallery from '../../components/ImageGallery.astro';
 import { Bed, Bath, Ruler, Car } from '@lucide/astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import CallToAction from '../../components/CallToAction.astro';
 
 export async function getStaticPaths() {
   const properties = await getCollection('properties');
@@ -207,6 +208,24 @@ const relatedProperties = allProperties
                   </p>
                 </div>
               </div>
+
+              <!-- Property-level map: centered on the property's coordinates (higher zoom than zone maps) -->
+              <div class="mt-6 relative rounded-lg overflow-hidden elegant-shadow">
+                <iframe
+                  src={property.data?.location?.coordinates
+                    ? `https://maps.google.com/maps?q=${property.data.location.coordinates.lat},${property.data.location.coordinates.lng}&z=16&output=embed`
+                    : `https://maps.google.com/maps?q=${encodeURIComponent(property.data.location.address)}&z=16&output=embed`}
+                  width="100%"
+                  height="300"
+                  style="border:0; filter: grayscale(100%) sepia(30%) hue-rotate(20deg) saturate(60%) contrast(85%);"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  class="w-full"
+                  title={`Map of ${property.data.location.address}`}
+                ></iframe>
+              </div>
+
             </div>
           </div>
 
@@ -243,45 +262,24 @@ const relatedProperties = allProperties
 
         <!-- Sidebar -->
         <div class="lg:col-span-1">
-          <!-- Contact Agent Widget -->
-          <ContactAgent
-            agent={agentData?.data}
-            propertySlug={property.slug}
-            compact={true}
-          />
+          <!-- Contact Agent Widget (now sticky on large screens) -->
+          <div class="lg:sticky lg:top-24 lg:self-start lg:z-30">
+            <ContactAgent
+              agent={agentData?.data}
+              propertySlug={property.slug}
+              compact={true}
+            />
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Call to Action -->
-  <section class="py-16 bg-primary">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold text-white mb-4">
-        Interested in This Property?
-      </h2>
-      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
-        Schedule a viewing or get more information about this exceptional property. Our agents are ready to help you.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="tel:+15551234567"
-          class="inline-flex items-center bg-white text-primary px-6 py-3 rounded-sm hover:bg-neutral-50 transition-colors font-medium"
-        >
-          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
-          </svg>
-          Call Us Now
-        </a>
-        <a
-          href="#contact-form"
-          class="inline-flex items-center border-2 border-white text-white px-6 py-3 rounded-sm hover:bg-white hover:text-primary transition-colors font-medium"
-        >
-          Send Message
-        </a>
-      </div>
-    </div>
-  </section>
+  <CallToAction
+    title="Interested in This Property?"
+    subtitle="Schedule a viewing or get more information about this exceptional property. Our agents are ready to help you."
+  />
 </Layout>
 
 <style>

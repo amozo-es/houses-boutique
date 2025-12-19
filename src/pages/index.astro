@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import PropertyCard from '../components/PropertyCard.astro';
 import { getCollection } from 'astro:content';
+import CallToAction from '../components/CallToAction.astro';
 
 // Get featured properties and zones
 const featuredProperties = await getCollection('properties', (entry) => entry.data.featured);
@@ -165,34 +166,8 @@ const availableZones = [...new Set(allProperties.map(p => p.data.zone))];
   </section>
 
   <!-- Call to Action -->
-  <section class="py-16 bg-primary">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-        Find Your Dream Property Today
-      </h2>
-      <p class="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-        Let our expert team help you discover the perfect property that matches your lifestyle and investment goals.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="/contact"
-          class="inline-flex items-center bg-primary-soft text-primary-lightest px-6 py-3 rounded-sm hover:bg-primary transition-colors font-medium"
-        >
-          Schedule Consultation
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </a>
-        <a
-          href="/properties"
-          class="inline-flex items-center border-2 border-white text-white px-6 py-3 rounded-sm hover:bg-white hover:text-primary transition-colors font-medium"
-        >
-          Browse Properties
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </a>
-      </div>
-    </div>
-  </section>
+  <CallToAction
+    title="Find Your Dream Property Today"
+    subtitle="Let our expert team help you discover the perfect property that matches your lifestyle and investment goals."
+  />
 </Layout>

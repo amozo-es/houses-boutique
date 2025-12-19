@@ -3,7 +3,9 @@ import Layout from '../../layouts/Layout.astro';
 import HeroSecondary from '../../components/HeroSecondary.astro';
 import PropertyCard from '../../components/PropertyCard.astro';
 import ContactForm from '../../components/ContactForm.astro';
+import RelatedZones from '../../components/RelatedZones.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import CallToAction from '../../components/CallToAction.astro';
 
 export async function getStaticPaths() {
   const zones = await getCollection('zones');
@@ -54,6 +56,7 @@ const formatNumber = (num: number) => {
     height="h-96"
     alignment="left"
     backgroundImage={zone.data.image}
+    backgroundStyle="image"
   />
 
   <!-- Zone Overview Section -->
@@ -177,75 +180,10 @@ const formatNumber = (num: number) => {
   )}
 
   <!-- Related Zones Section -->
-  {relatedZones.length > 0 && (
-    <section class="py-16 bg-white">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-primary-dark mb-4">
-            Explore Other Premium Zones
-          </h2>
-          <p class="text-neutral max-w-2xl mx-auto">
-            Discover other exclusive neighborhoods with exceptional properties
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {relatedZones.map((relatedZone) => (
-            <div class="group cursor-pointer">
-              <div class="relative overflow-hidden rounded-lg elegant-shadow hover:elegant-shadow-lg transition-all duration-300">
-                <img
-                  src={relatedZone.data.image}
-                  alt={relatedZone.data.title}
-                  class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <h3 class="text-xl font-semibold mb-2">{relatedZone.data.title}</h3>
-                  <p class="text-white/90 text-sm line-clamp-2">{relatedZone.data.description}</p>
-                </div>
-              </div>
-              <a
-                href={`/zones/${relatedZone.slug}`}
-                class="block mt-4 text-center text-primary hover:text-primary-soft transition-colors font-medium"
-              >
-                Explore {relatedZone.data.title} →
-              </a>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
+  {relatedZones.length > 0 && <RelatedZones zones={relatedZones} /> }
 
   <!-- Contact Section -->
-  <section class="py-16 bg-primary">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold text-white mb-4">
-        Interested in {zone.data.title} Properties?
-      </h2>
-      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
-        Let our expert team help you find the perfect property in {zone.data.title}.
-        Contact us for personalized assistance and exclusive property viewings.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="/contact"
-          class="inline-flex items-center bg-primary-soft text-primary-lightest px-6 py-3 rounded-sm hover:bg-primary transition-colors font-medium"
-        >
-          Schedule Consultation
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </a>
-        <a
-          href="/properties"
-          class="inline-flex items-center border-2 border-white text-white px-6 py-3 rounded-sm hover:bg-white hover:text-primary transition-colors font-medium"
-        >
-          Browse All Properties
-        </a>
-      </div>
-    </div>
-  </section>
+  <CallToAction title={`Interested in ${zone.data.title} Properties?`} subtitle={`Let our expert team help you find the perfect property in ${zone.data.title}. Contact us for personalized assistance and exclusive property viewings.`} />
 </Layout>
 
 <style>

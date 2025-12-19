@@ -2,7 +2,8 @@
 title: "Puerto Banús"
 description: "World-famous luxury marina with superyachts, exclusive shopping, fine dining, and prestigious waterfront living."
 overview: "Puerto Banús is the epitome of Mediterranean luxury, featuring one of the world's most prestigious marinas filled with superyachts, exclusive boutiques, world-class restaurants, and the most glamorous nightlife on the Costa del Sol. This exclusive destination combines nautical sophistication with unparalleled shopping and dining, making it the playground of the international elite."
-image: "https://images.unsplash.com/photo-1548517929-777e3620bf97?w=1200&h=800&fit=crop&crop=entropy&auto=format&query=puerto%20banus%20luxury%20marina"
+image: "https://images.unsplash.com/photo-1589642073293-d0d511afb66e?w=1200&h=800&fit=crop&crop=entropy&auto=format&query=puerto%20banus%20luxury%20marina"
+thumbnail: "https://images.unsplash.com/photo-1589642073293-d0d511afb66e?w=400&h=260&fit=crop&crop=entropy&auto=format&query=puerto%20banus%20luxury%20marina"
 meta:
   title: "Puerto Banús Luxury Properties | Marina Homes & Waterfront Real Estate | Houses Boutique"
   description: "Discover exclusive luxury properties for sale in Puerto Banús, Marbella. Premium waterfront penthouses, marina apartments, and luxury homes near exclusive shopping and fine dining. Contact our real estate experts today."
